@@ -1,0 +1,17 @@
+h1 {
+	color: green;
+	text-align: center;
+}
+
+/* My comment */
+.prettycircle{
+	fill:red;
+	opacity: .5;
+}
+
+.prettycircle2 {
+	stroke:blue;
+	opacity:.9;
+	fill:green;
+	stroke-width: 10;
+}
