@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: Python Actions</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+  <div class="banner">
+  </div>
+
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">Python Actions</h1>
+          
+<div id="learning-objectives" class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Write a Python task</li>
+<li>Expand on automatic variables</li>
+</ul>
+</div>
+</div>
+<p>So far, we have downloaded the data and gunzipped it. Both of those tasks were simple shell commands. However, pydoit can do much more than that; actions can also be arbitrary python code. We will take advantage of that to do some &quot;analysis&quot; of our Super Smash Bros data and generate a plot.</p>
+<p>Python tasks are defined in the same way as any other task, but the actions entry will include a function name instead. Python lets us define functions within functions and access variables from the outer function's namespace (there are called closures, which are beyond the scope of this workshop); to make things simpler, we'll define our task this way.</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> task_plot_heatmap():
+
+    <span class="kw">def</span> do_plot(file_dep, targets):
+        <span class="ch">import</span> matplotlib.pyplot <span class="ch">as</span> plt
+        <span class="ch">import</span> pandas <span class="ch">as</span> pd
+        <span class="ch">import</span> seaborn <span class="ch">as</span> sns
+
+        <span class="co"># Read the data in a DataFrame</span>
+        data = pd.read_csv(file_dep[<span class="dv">0</span>], index_col=<span class="dv">0</span>)
+        <span class="co"># Make a heatmap and dendrogram with seaborn</span>
+        clst = sns.clustermap(data, linewidths=.<span class="dv">5</span>, figsize=(<span class="dv">8</span>, <span class="dv">8</span>), square=<span class="ot">True</span>,
+                              method=<span class="st">&#39;ward&#39;</span>, z_score=<span class="dv">0</span>, row_cluster=<span class="ot">False</span>)
+        clst.savefig(targets[<span class="dv">0</span>])
+
+    <span class="kw">return</span> {<span class="st">&#39;actions&#39;</span>: [do_plot],
+            <span class="co">&#39;file_dep&#39;</span>: [<span class="st">&#39;Melee_data.csv&#39;</span>],
+            <span class="co">&#39;targets&#39;</span>: [<span class="st">&#39;Melee_data.csv.heatmap.pdf&#39;</span>]}</code></pre>
+<p>The python action takes two parameters -- <code>file_dep</code> and <code>targets</code>. These behave similarly to the <em>automatic variables</em> we accessed earlier, but instead the actual python objects are passed to the function and can be accessed. It is important to note that only the task function <code>task_plot_heatmap</code> is executed immediately when we run the pipeline; the <code>do_plot</code> function will be defined, and then only executed when and if the task is determined to be out of date.</p>
+<p>Run it and take a look at the output.</p>
+<p>Well that sucks.</p>
+<p>It's likely that your labels are all garbled and overlapping. Let's add some code to fix them and rerun it.</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> task_plot_heatmap():
+
+    <span class="kw">def</span> do_plot(dependencies, targets):
+        <span class="ch">import</span> matplotlib.pyplot <span class="ch">as</span> plt
+        <span class="ch">import</span> pandas <span class="ch">as</span> pd
+        <span class="ch">import</span> seaborn <span class="ch">as</span> sns
+
+        data = pd.read_csv(<span class="dt">list</span>(dependencies)[<span class="dv">0</span>], index_col=<span class="dv">0</span>)
+        clst = sns.clustermap(data, linewidths=.<span class="dv">5</span>, figsize=(<span class="dv">8</span>, <span class="dv">8</span>), square=<span class="ot">True</span>,
+                              method=<span class="st">&#39;ward&#39;</span>, z_score=<span class="dv">0</span>, row_cluster=<span class="ot">False</span>)
+        <span class="co"># We like pretty charts, so rotate the labels</span>
+        plt.setp(clst.ax_heatmap.yaxis.get_majorticklabels(), rotation=<span class="dv">0</span>)
+        plt.setp(clst.ax_heatmap.xaxis.get_majorticklabels(), rotation=<span class="dv">90</span>)
+        clst.savefig(targets[<span class="dv">0</span>])
+
+    <span class="kw">return</span> {<span class="st">&#39;actions&#39;</span>: [do_plot],
+            <span class="co">&#39;file_dep&#39;</span>: [<span class="st">&#39;Melee_data.csv&#39;</span>],
+            <span class="co">&#39;targets&#39;</span>: [<span class="st">&#39;Melee_data.csv.heatmap.pdf&#39;</span>]}</code></pre>
+<p>It didn't run! That's because we didn't change any of the targets or dependencies, so as far as doit is concerned, nothing has changed. Not having the dodo file be a dependency is a design decision defended in the documentation; in order to regenerate the plot, you'll have to <code>rm</code> the PDF file and run doit again.</p>
+        </div>
+      </div>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="camille.scott.w@gmail.com">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>

@@ -38,7 +38,7 @@
 </div>
 <p>The first step in our pipeline is to actually get the data. Because we're all radical open science types, we keep our data freely available for download. The data we'll use is stored in an <a href="https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz">S3 bucket</a>. It is clearly a dataset of great performance: win ratios from a Super Smash Brothers server! We could just have our users download it on their own, but we can easily remove this necessity by automating the process with curl.</p>
 <p>If we just doing this on the command line, our command would look something like this:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">curl</span> -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz </code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">curl</span> -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz </code></pre>
 <p>What is going on in this command? It runs a program, <code>curl</code>, giving it a URL, and creates a file, <code>Melee_data.csv</code>. If we look at the command as a task to complete, this file is that task's output, and if this file exists already, we can safely assume that the command has been run. In doit lingo, we call it the task's <em>target</em>, and we call the command itself the task's <em>action</em>. Based on the previous section, you might be able to guess what this task would look like.</p>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> task_download_data():
     <span class="kw">return</span> {<span class="st">&#39;actions&#39;</span>: [<span class="st">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span>],

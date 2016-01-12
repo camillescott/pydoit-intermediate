@@ -74,16 +74,16 @@
 </div>
 </div>
 <p>Now that we know more about how tasks are considered up to date, let's introduce a file dependency. The file we downloaded was a gzip archive, so we'll write a task to extract it. The command we would run in the shell might be:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">gunzip</span> Melee_data.csv.gz</code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">gunzip</span> Melee_data.csv.gz</code></pre>
 <p>This would produce a file called <code>Melee_data.csv</code>. We can see then that we have a <em>target</em> (<code>Melee_data.csv</code>), an <em>action</em> (running <code>gunzip</code>), and a <em>file dependency</em> (<code>Melee_data.csv.gz</code>). Let's add the task to our <code>dodo.py</code>.</p>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> task_gunzip_data():
     <span class="kw">return</span> {<span class="st">&#39;actions&#39;</span>: [<span class="st">&#39;gunzip -c </span><span class="ot">%(dependencies)s</span><span class="st"> &gt; </span><span class="ot">%(targets)s</span><span class="st">&#39;</span>],
             <span class="co">&#39;targets&#39;</span>: [<span class="st">&#39;Melee_data.csv&#39;</span>],
             <span class="co">&#39;file_dep&#39;</span>: [<span class="st">&#39;Melee_data.csv.gz&#39;</span>]}</code></pre>
-<p>On top of the file dependency, this task also introduces automatic variables. These are in the <code>actions</code> string, and are recognized by the task creator. This removes redundancy and saves us some code.</p>
+<p>On top of the file dependency, this task also introduces <em>automatic variables</em>. These are in the <code>actions</code> string, and are recognized by the task creator. This removes redundancy and saves us some code.</p>
 <p>When we run <code>doit</code>, we get output showing that only the gunzip task was executed.</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">--</span> download_data
-<span class="kw">.</span>  <span class="kw">gunzip_data</span></code></pre>
+<pre class="output"><code>-- download_data
+.  gunzip_data</code></pre>
         </div>
       </div>
       <div class="footer">
