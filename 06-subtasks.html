@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: Subtasks</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+  <div class="banner">
+  </div>
+
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">Subtasks</h1>
+          <h2 class="subtitle">Using subtasks to download multiple files</h2>
+<div id="learning-objectives" class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="learning-objectives" class="objectives panel panel-warning"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Introduce subtasks.</li>
+<li>Add a document templating task.</li>
+</ul>
+</div>
+</div>
+<p>We've defined tasks to download our data, gunzip it, and plot it. However, our original goal was to create a publication pipeline, so we should get on with it!</p>
+<p>The file actually defining our paper will be written in <a href="https://daringfireball.net/projects/markdown/">markdown</a>. For the unititiated, markdown is an extremely simply markup language (like HTML) designed with the goal of being human readable. Eventually we'll be using pandoc to compile the markdown document into our format of choice. However, before we do any of that, we need to add our image file and other information to the markdown document. We could just include these things directly in the file, but we're cooler than that -- we want to do it dynamically. We'll use the <a href="http://jinja.pocoo.org/docs/dev/">jinja2</a> templating library to build our markdown document dynamically.</p>
+<p>Given that this is a course on pydoit and not jinja2, it would be best if we downloaded the jinja2 template rather than writing it ourselves. Convenienty, we already have a task for downloading things -- but currently, it only downloads a single file. &quot;Surely,&quot; you say, &quot;this task must be capable of downloading other files!&quot; And you would be correct! We can use <em>subtasks</em> to generate multiple tasks from the same task function.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> os
+<span class="im">from</span> doit.task include clean_targets
+
+DATA_URLS <span class="op">=</span> [<span class="st">&#39;https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.document.md.tpl&#39;</span>,
+             <span class="co">&#39;https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span>]
+
+<span class="kw">def</span> task_download_data():
+
+    <span class="kw">def</span> print_url(URL):
+        <span class="bu">print</span> <span class="st">&#39;File was retrieved from: </span><span class="sc">{0}</span><span class="st">&#39;</span>.<span class="bu">format</span>(URL)
+
+    <span class="cf">for</span> URL <span class="op">in</span> DATA_URLS:
+        target <span class="op">=</span> os.path.basename(URL)
+        <span class="cf">yield</span> {<span class="st">&#39;name&#39;</span>: <span class="st">&#39;download:</span><span class="sc">{0}</span><span class="st">&#39;</span>.<span class="bu">format</span>(target),
+               <span class="co">&#39;actions&#39;</span>: [<span class="st">&#39;curl -OL </span><span class="sc">{0}</span><span class="st">&#39;</span>.<span class="bu">format</span>(URL)],
+               <span class="co">&#39;targets&#39;</span>: [target],
+               <span class="co">&#39;uptodate&#39;</span>: [run_once],
+               <span class="co">&#39;clean&#39;</span>: [clean_targets, (print_url, [URL])]}</code></pre></div>
+<p>We've made a number of changes here, but most important is that we've switched to using a generator object instead of a normal function. For those of you not familiar with generators, the generator is signified by the <code>yield</code> keyword, which takes the place of a <code>return</code> keyword. Because this function has a <code>yield</code>, it becomes a generator and can be iterated over, for example, with a <code>for</code> loop. For pydoit specifically, this means it can yield multiple tasks, one for each in the <code>DATA_URLS</code> list. We've also included a <code>name</code> attribute; this is necessary because pydoit needs the ability to uniquely identify tasks in order to resolve dependencies.</p>
+<p>Now that we have the task to download the template file, we'll add one to compile the template into a markdown file. This is another python task, which will include much of what we've gone over already.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> jinja2
+
+<span class="co"># ... the other tasks ...</span>
+
+<span class="kw">def</span> task_build_markdown_file():
+
+    <span class="kw">def</span> do_build(targets):
+        
+        <span class="cf">with</span> <span class="bu">open</span>(targets[<span class="dv">0</span>] <span class="op">+</span> <span class="st">&#39;.tpl&#39;</span>) <span class="im">as</span> fp:
+            template <span class="op">=</span> jinja2.Template(fp.read())
+
+        <span class="cf">with</span> <span class="bu">open</span>(targets[<span class="dv">0</span>], <span class="st">&#39;wb&#39;</span>) <span class="im">as</span> fp:
+            fp.write(template.render(author<span class="op">=</span><span class="st">&#39;Your Name&#39;</span>,
+                                     affiliation<span class="op">=</span><span class="st">&#39;Your Institution&#39;</span>,
+                                     date<span class="op">=</span><span class="st">&#39;Jan 20, 2016&#39;</span>,
+                                     heatmap_filename<span class="op">=</span><span class="st">&#39;Melee_data.csv.heatmap.pdf&#39;</span>))
+
+    <span class="cf">return</span> {<span class="st">&#39;actions&#39;</span>: [do_build],
+            <span class="co">&#39;file_dep&#39;</span>: [<span class="st">&#39;Melee_data.csv.heatmap.pdf&#39;</span>,
+                         <span class="co">&#39;Melee_data.csv.document.md.tpl&#39;</span>],
+            <span class="co">&#39;targets&#39;</span>: [<span class="st">&#39;Melee_data.csv.document.md&#39;</span>],
+            <span class="co">&#39;clean&#39;</span>: [clean_targets]}</code></pre></div>
+<p>This task creates a jinja2 <code>Template</code> object from the template file we downloaded, then renders it into its final form by passing in a number of keyword arguments.</p>
+<div id="fun-with-templates" class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="fun-with-templates" class="challenge panel panel-success"><span class="glyphicon glyphicon-pencil"></span>Fun with Templates</h2>
+</div>
+<div class="panel-body">
+<p>Although templating isn't specific to pydoit, you may find jinja2 quite useful. Try playing around with the template <code>.tpl</code> file and adding your own content to it. Can you see how to to add additional fields?</p>
+</div>
+</div>
+        </div>
+      </div>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="camille.scott.w@gmail.com">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>

@@ -36,5 +36,6 @@ framework for publishing a reproducible paper.
 3.  [Dependencies and uptodate](03-dependencies.html)
 4.  [Python Tasks](04-python-tasks.html)
 5.  [Cleanup](05-cleanup.html)
-6.  [Importing Tasks](06-importaing.html)
+6.  [Subtasks](06-subtasks.html)
+7.  [Finishing Up](07-finishing-up.html)
 

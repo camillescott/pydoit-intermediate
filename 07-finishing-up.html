@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: Finishing Up</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+  <div class="banner">
+  </div>
+
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">Finishing Up</h1>
+          
+<div id="learning-objectives" class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="learning-objectives" class="objectives panel panel-warning"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Add the final step to compile the document.</li>
+<li>Show how to import tasks.</li>
+</ul>
+</div>
+</div>
+<p>First code block, adding the final task. This block doesn't add any new content, other than finishing up the document pipeline. Students will be told to change the extension to an alternative if they don't have a working LaTeX installation.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> task_pandoc():
+
+    cmd <span class="op">=</span> <span class="st">&#39;pandoc -r markdown+yaml_metadata_block+startnum+fancy_lists&#39;</span><span class="op">\</span>
+          <span class="co">&#39; -s -S %(dependencies)s -o %(targets)s&#39;</span>
+
+    <span class="cf">return</span> {<span class="st">&#39;actions&#39;</span>: [cmd],
+            <span class="co">&#39;file_dep&#39;</span>: [<span class="st">&#39;Melee_data.csv.document.md&#39;</span>],
+            <span class="co">&#39;targets&#39;</span>: [<span class="st">&#39;Melee_data.csv.document.pdf&#39;</span>],
+            <span class="co">&#39;clean&#39;</span>: [clean_targets]}</code></pre></div>
+<p>The final section will show students how to import the <code>dict_to_task</code> function and use it to manually create task objects. We'll give them the following code:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> create_task_object(task_dict_func):
+    <span class="co">&#39;&#39;&#39;Wrapper to decorate functions returning pydoit</span>
+<span class="co">    Task dictionaries and have them return pydoit Task</span>
+<span class="co">    objects</span>
+<span class="co">    &#39;&#39;&#39;</span>
+    <span class="kw">def</span> d_to_t(<span class="op">*</span>args, <span class="op">**</span>kwargs):
+        ret_dict <span class="op">=</span> task_dict_func(<span class="op">*</span>args, <span class="op">**</span>kwargs)
+        <span class="cf">return</span> dict_to_task(ret_dict)
+    <span class="cf">return</span> d_to_t</code></pre></div>
+<p>Which defines a decorator to wrap their task functions with. Once they've done that, they can import tasks from a separate file and either wrap them again with <code>task_</code> functions, or gather them into a list and pass them to a custom loader:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> run_tasks(tasks, args, config<span class="op">=</span>{<span class="st">&#39;verbosity&#39;</span>: <span class="dv">0</span>}):
+    
+    <span class="cf">if</span> <span class="bu">type</span>(tasks) <span class="op">is</span> <span class="op">not</span> <span class="bu">list</span>:
+        <span class="cf">raise</span> <span class="pp">TypeError</span>(<span class="st">&#39;tasks must be a list&#39;</span>)
+   
+    <span class="kw">class</span> Loader(TaskLoader):
+        <span class="at">@staticmethod</span>
+        <span class="kw">def</span> load_tasks(cmd, opt_values, pos_args):
+            <span class="cf">return</span> tasks, config
+   
+    DoitMain(Loader()).run(args)</code></pre></div>
+<p>This last piece of code will be a jumping off point for including argparse and writing their own applications. I won't go in to heavy detail here, because this starts to get pretty advanced; rather, it's meant to show them the extent of what they can accomplish with pydoit.</p>
+        </div>
+      </div>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="camille.scott.w@gmail.com">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
