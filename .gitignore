@@ -8,3 +8,8 @@ CONDUCT.html
 *.pyc
 _site
 .DS_Store
+*.swp
+*.pdf
+*.gz
+*.doit.*
+.doit.db.db
