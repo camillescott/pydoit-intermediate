@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
-    <title>Software Carpentry: Targets and Dependencies</title>
+    <title>Software Carpentry: Targets</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
@@ -23,11 +23,11 @@
 
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
-          <h1 class="title">Targets and Dependencies</h1>
+          <h1 class="title">Targets</h1>
           
 <div id="learning-objectives" class="objectives panel panel-warning">
 <div class="panel-heading">
-<h2 id="learning-objectives" class="objectives panel panel-warning"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
 </div>
 <div class="panel-body">
 <ul>
@@ -36,33 +36,24 @@
 </ul>
 </div>
 </div>
-<p>The first step in our pipeline is to actually get the data. Because we're all radical open science types, we keep our data freely available for download. The data we'll use is stored in a gist on <a href="https://gist.github.com/camillescott/ee842c1677447f373488">Camille's github page</a>. It is clearly a dataset of great performance: win ratios from a Super Smash Brothers server! We could just have our users download it on their own, but we can easily remove this necessity by automating the process with curl.</p>
-<p>If we just doing this on the command line, our command would look something like this (I've used a URL shortener because github gist links are really long):</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">curl</span> -L http://tinyurl.com/zdhpjlk <span class="kw">&gt;</span> Melee_data.csv</code></pre></div>
+<p>The first step in our pipeline is to actually get the data. Because we're all radical open science types, we keep our data freely available for download. The data we'll use is stored in an <a href="https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz">S3 bucket</a>. It is clearly a dataset of great performance: win ratios from a Super Smash Brothers server! We could just have our users download it on their own, but we can easily remove this necessity by automating the process with curl.</p>
+<p>If we just doing this on the command line, our command would look something like this:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">curl</span> -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz </code></pre>
 <p>What is going on in this command? It runs a program, <code>curl</code>, giving it a URL, and creates a file, <code>Melee_data.csv</code>. If we look at the command as a task to complete, this file is that task's output, and if this file exists already, we can safely assume that the command has been run. In doit lingo, we call it the task's <em>target</em>, and we call the command itself the task's <em>action</em>. Based on the previous section, you might be able to guess what this task would look like.</p>
-<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> task_download_data():
-    <span class="cf">return</span> {<span class="st">&#39;actions&#39;</span>: [<span class="st">&#39;curl -L http://tinyurl.com/zdhpjlk &gt; Melee_data.csv&#39;</span>],
-            <span class="co">&#39;targets&#39;</span>: [<span class="st">&#39;Melee_data.csv&#39;</span>]}</code></pre></div>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> task_download_data():
+    <span class="kw">return</span> {<span class="st">&#39;actions&#39;</span>: [<span class="st">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span>],
+            <span class="co">&#39;targets&#39;</span>: [<span class="st">&#39;Melee_data.csv.gz&#39;</span>]}</code></pre>
 <p>Open your <code>dodo.py</code> and add this function to it. Save and run the <code>doit</code> command. You'll see the task output, followed by the normal output you'd expect from <code>curl</code>.</p>
 <pre class="output"><code>.  download_data</code></pre>
 <p>The dot means that the task was executed. If we run <code>doit</code> again, the task will run again. This is because we have specified no dependencies, and doit will determine that the task is never up to date; we will learn about dependencies in the next section.</p>
 <div id="the-doit-command" class="callout panel panel-info">
 <div class="panel-heading">
-<h2 id="the-doit-command" class="callout panel panel-info"><span class="glyphicon glyphicon-pushpin"></span>The doit command</h2>
+<h2><span class="glyphicon glyphicon-pushpin"></span>The doit command</h2>
 </div>
 <div class="panel-body">
 <p>When we run <code>doit</code>, the current directory is searched for a file named <code>dodo.py</code>. That file is searched for tasks which are executed. Those familiar with <code>make</code> might have noticed some similarity, where typing <code>make</code> will search the current directoy for a file named <code>Makefile</code>. We will cover alternative ways to execute your doit tasks later on.</p>
 </div>
 </div>
-<div id="testing-your-installation" class="challenge panel panel-success">
-<div class="panel-heading">
-<h2 id="testing-your-installation" class="challenge panel panel-success"><span class="glyphicon glyphicon-pencil"></span>Testing your installation</h2>
-</div>
-<div class="panel-body">
-<p>Create a working directory, and within it, create a script named dodo.py. Copy the above function into it, save, and close. Then, move to that directory and run <code>doit</code>. This should run the task and generate <code>hello.txt</code>.</p>
-</div>
-</div>
-<p>Of course, hello world doesn't really do anything for us. Throughout this lesson, we're going to build a pipeline which downloads some data, plots it with matplotlib, generates a markup file with the chart, and outputs a final compiled document -- in other words, a barebones version of a publication pipeline.</p>
         </div>
       </div>
       <div class="footer">

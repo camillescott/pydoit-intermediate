@@ -27,7 +27,7 @@
           
 <div id="learning-objectives" class="objectives panel panel-warning">
 <div class="panel-heading">
-<h2 id="learning-objectives" class="objectives panel panel-warning"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
 </div>
 <div class="panel-body">
 <ul>
@@ -42,13 +42,13 @@
 <li>Tasks are defined individually and executed in order according to dependencies, via a directed acyclic graph</li>
 </ul>
 <p>For me, it helps to immediately get started with an example. The basic building blocks of a pydoit workflow are tasks, which encode the work we would like to get done. Here is an extremely simple task:</p>
-<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> task_hello_world():
-    <span class="cf">return</span> {<span class="st">&#39;actions&#39;</span>: [<span class="st">&#39;echo &quot;hello world!&quot; &gt; hello.txt&#39;</span>],
-            <span class="co">&#39;targets&#39;</span>: [<span class="st">&#39;hello.txt&#39;</span>]}</code></pre></div>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> task_hello_world():
+    <span class="kw">return</span> {<span class="st">&#39;actions&#39;</span>: [<span class="st">&#39;echo &quot;hello world!&quot; &gt; hello.txt&#39;</span>],
+            <span class="co">&#39;targets&#39;</span>: [<span class="st">&#39;hello.txt&#39;</span>]}</code></pre>
 <p>The task is a python function prefixed with <code>task</code>, which returns a dictionary containing some predefined entries. The <code>actions</code> entry is a list of the actual commands we'd like to run, in this case, a single shell command. The <code>targets</code> entry is a list of the files output by this task.</p>
 <div id="testing-your-installation" class="challenge panel panel-success">
 <div class="panel-heading">
-<h2 id="testing-your-installation" class="challenge panel panel-success"><span class="glyphicon glyphicon-pencil"></span>Testing your installation</h2>
+<h2><span class="glyphicon glyphicon-pencil"></span>Testing your installation</h2>
 </div>
 <div class="panel-body">
 <p>Create a working directory, and within it, create a script named dodo.py. Copy the above function into it, save, and close. Then, move to that directory and run <code>doit</code>. This should run the task and generate <code>hello.txt</code>.</p>

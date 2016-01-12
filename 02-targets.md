@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Targets and Dependencies
+title: Targets
 subtitle: 
 minutes: 20
 ---
@@ -12,16 +12,16 @@ minutes: 20
 
 The first step in our pipeline is to actually get the data. Because we're all
 radical open science types, we keep our data freely available for download. The
-data we'll use is stored in a gist on [Camille's github page](https://gist.github.com/camillescott/ee842c1677447f373488).
+data we'll use is stored in an [S3 bucket](https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz).
 It is clearly a dataset of great performance: win ratios from a Super Smash Brothers
 server! We could just have our users download it on their own, but we can easily
 remove this necessity by automating the process with curl.
 
 If we just doing this on the command line, our command would look something like
-this (I've used a URL shortener because github gist links are really long):
+this:
 
 ~~~ {.bash}
-curl -L http://tinyurl.com/zdhpjlk > Melee_data.csv
+$ curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz 
 ~~~
 
 What is going on in this command? It runs a program, `curl`, giving it a URL, and
@@ -33,8 +33,8 @@ to guess what this task would look like.
 
 ~~~ {.python}
 def task_download_data():
-    return {'actions': ['curl -L http://tinyurl.com/zdhpjlk > Melee_data.csv'],
-            'targets': ['Melee_data.csv']}
+    return {'actions': ['curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz'],
+            'targets': ['Melee_data.csv.gz']}
 ~~~
 
 Open your `dodo.py` and add this function to it. Save and run the `doit` command.
@@ -56,6 +56,4 @@ that the task is never up to date; we will learn about dependencies in the next 
 > with `make` might have noticed some similarity, where typing `make` will search
 > the current directoy for a file named `Makefile`. We will cover alternative ways
 > to execute your doit tasks later on.
-
-
 
