@@ -35,6 +35,6 @@ framework for publishing a reproducible paper.
 2.  [Targets](02-targets.html)
 3.  [Dependencies and uptodate](03-dependencies.html)
 4.  [Python Tasks](04-python-tasks.html)
-5.  [Cleanup and Automatic Variables](05-cleanup.html)
+5.  [Cleanup](05-cleanup.html)
 6.  [Importing Tasks](06-importaing.html)
 
