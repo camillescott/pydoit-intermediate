@@ -34,7 +34,7 @@ framework for publishing a reproducible paper.
 1.  [Background and Basics](01-basics.html)
 2.  [Targets](02-targets.html)
 3.  [Dependencies and uptodate](03-dependencies.html)
-4.  [Python Tasks](04-python-tasks.html)
+4.  [Python Tasks](04-python.html)
 5.  [Cleanup](05-cleanup.html)
 6.  [Subtasks](06-subtasks.html)
 7.  [Finishing Up](07-finishing-up.html)
