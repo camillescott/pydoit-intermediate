@@ -1,9 +1,17 @@
 from doit.tools import run_once
+from doit.task import clean_targets
+
+DATA_URL = 'https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz'
 
 def task_download_data():
-     return {'actions': ['curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz'],
+
+    def print_url():
+        print 'File was retrieved from: {0}'.format(DATA_URL)
+
+    return {'actions': ['curl -OL {0}'.format(DATA_URL)],
              'targets': ['Melee_data.csv.gz'],
-             'uptodate': [run_once]}
+             'uptodate': [run_once],
+             'clean': [clean_targets, print_url]}
 
 def task_gunzip_data():
     return {'actions': ['gunzip -c %(dependencies)s > %(targets)s'],
