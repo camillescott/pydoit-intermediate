@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
-    <title>Software Carpentry: Dependencies and uptodate</title>
+    <title>pydoit for automation and applications: Dependencies and uptodate</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
     <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <!-- <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/> -->
     <meta charset="UTF-8" />
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -19,6 +19,7 @@
   <body class="lesson">
     <div class="container card">
   <div class="banner">
+  <h3>pydoit for automation and applications</h3>
   </div>
 
       <div class="row">
@@ -27,7 +28,7 @@
           
 <div id="learning-objectives" class="objectives panel panel-warning">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+<h2 id="learning-objectives" class="objectives panel panel-warning"><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
 </div>
 <div class="panel-body">
 <ul>
@@ -39,18 +40,18 @@
 <p>If you run <code>doit</code> again, you'll notice that you get the same output as before -- the dot and task name indicating that the task was run again. Preferably, we'd like the task not to run once it already has (the file might be large, for example). pydoit handles this two ways: through dependencies and the <code>uptodate</code> function. <em>File dependencies</em> are quite intuitive. The task names the files it depends on, and if any of those change, the task is rerun. Our download command already adds a bit of complexity though, because it does not depend on any files. This is where <code>uptodate</code> comes in.</p>
 <p><code>uptodate</code> is another entry in the task dictionary. It is a list of booleans, callables (that is, functions), or strings specifying shell commands. If any of the <code>uptodate</code> items evaluates to <code>False</code>, the task is not run.</p>
 <p>For our download task, we are going to use a function which is included in the doit library, <code>run_once</code>. As one might expect, this makes sure the task is run at least once. Let's add it to our <code>dodo.py</code>.</p>
-<pre class="sourceCode python"><code class="sourceCode python"><span class="ch">from</span> doit.tools <span class="ch">import</span> run_once
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">from</span> doit.tools <span class="im">import</span> run_once
 
 <span class="kw">def</span> task_download_data():
-    <span class="kw">return</span> {<span class="st">&#39;actions&#39;</span>: [<span class="st">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span>],
+    <span class="cf">return</span> {<span class="st">&#39;actions&#39;</span>: [<span class="st">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span>],
             <span class="co">&#39;targets&#39;</span>: [<span class="st">&#39;Melee_data.csv.gz&#39;</span>],
-            <span class="co">&#39;uptodate&#39;</span>: [run_once]}</code></pre>
+            <span class="co">&#39;uptodate&#39;</span>: [run_once]}</code></pre></div>
 <p>Now if we run <code>doit</code> again (twice more, actually), our output will change.</p>
 <pre class="output"><code>-- download_data</code></pre>
 <p>The dash-dash indicates that the task was determined to be up to date, and was not executed.</p>
 <div id="task-names" class="callout panel panel-info">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pushpin"></span>Task Names</h2>
+<h2 id="task-names" class="callout panel panel-info"><span class="glyphicon glyphicon-pushpin"></span>Task Names</h2>
 </div>
 <div class="panel-body">
 <p>By default, the task name will be taken from the function defining it. We can also define our own task names with the <code>name</code> entry in the task dictionary.</p>
@@ -67,19 +68,19 @@
 <p>The last of these explains why we need to include the <code>uptodate</code> entry in our download task; it has no file dependencies, and so will always be considered out of date, even if the target exists.</p>
 <div id="experimenting-with-uptodate" class="challenge panel panel-success">
 <div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Experimenting with uptodate</h2>
+<h2 id="experimenting-with-uptodate" class="challenge panel panel-success"><span class="glyphicon glyphicon-pencil"></span>Experimenting with uptodate</h2>
 </div>
 <div class="panel-body">
 <p>What would happen if we changed <code>uptodate</code> to <code>[True]</code>? How about <code>[False]</code>?</p>
 </div>
 </div>
 <p>Now that we know more about how tasks are considered up to date, let's introduce a file dependency. The file we downloaded was a gzip archive, so we'll write a task to extract it. The command we would run in the shell might be:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">gunzip</span> Melee_data.csv.gz</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">gunzip</span> Melee_data.csv.gz</code></pre></div>
 <p>This would produce a file called <code>Melee_data.csv</code>. We can see then that we have a <em>target</em> (<code>Melee_data.csv</code>), an <em>action</em> (running <code>gunzip</code>), and a <em>file dependency</em> (<code>Melee_data.csv.gz</code>). Let's add the task to our <code>dodo.py</code>.</p>
-<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> task_gunzip_data():
-    <span class="kw">return</span> {<span class="st">&#39;actions&#39;</span>: [<span class="st">&#39;gunzip -c </span><span class="ot">%(dependencies)s</span><span class="st"> &gt; </span><span class="ot">%(targets)s</span><span class="st">&#39;</span>],
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> task_gunzip_data():
+    <span class="cf">return</span> {<span class="st">&#39;actions&#39;</span>: [<span class="st">&#39;gunzip -c </span><span class="sc">%(dependencies)s</span><span class="st"> &gt; </span><span class="sc">%(targets)s</span><span class="st">&#39;</span>],
             <span class="co">&#39;targets&#39;</span>: [<span class="st">&#39;Melee_data.csv&#39;</span>],
-            <span class="co">&#39;file_dep&#39;</span>: [<span class="st">&#39;Melee_data.csv.gz&#39;</span>]}</code></pre>
+            <span class="co">&#39;file_dep&#39;</span>: [<span class="st">&#39;Melee_data.csv.gz&#39;</span>]}</code></pre></div>
 <p>On top of the file dependency, this task also introduces <em>automatic variables</em>. These are in the <code>actions</code> string, and are recognized by the task creator. This removes redundancy and saves us some code.</p>
 <p>When we run <code>doit</code>, we get output showing that only the gunzip task was executed.</p>
 <pre class="output"><code>-- download_data
@@ -88,7 +89,7 @@
       </div>
       <div class="footer">
         <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="https://github.com/camillescott/pydoit-intermediate">Source</a>
         <a class="label swc-blue-bg" href="camille.scott.w@gmail.com">Contact</a>
         <a class="label swc-blue-bg" href="LICENSE.html">License</a>
       </div>

@@ -38,6 +38,9 @@ check: $(ALL_MD)
 clean :
 	@rm -rf $$(find . -name '*~' -print)
 
+realclean: clean
+	rm *.html
+
 ## preview  : Build website locally for checking.
 preview : $(DST_ALL)
 
