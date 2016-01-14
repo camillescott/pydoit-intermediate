@@ -1,33 +1,36 @@
-pydoit for automation
+(py)doit for automation
 =====================
 
 an intermediate python workshop
 -------------------------------
 
--  Open science, reproducible science is good
--  We can help make our work reproducible by automating it
--  Automation can be tricky and time consuming, so we need tools to help
-   make it easier
--  Pydoit!
+This workshop will teach students how to make use of `doit <http://pydoit.org/index.html>`__
+for workflow automation. To accomplish this goal, students will be walked through the creation of
+a very basic publication pipeline, which will download data, create a graph, and compile the
+document into a PDF with `jinja2 <http://jinja.pocoo.org/docs/dev/>`__ and 
+`pandoc <http://pandoc.org/index.html>`__. This means that in addition
+to data analysis workflows, students will have a good idea of how to get started with 
+reproducible documents, improving their ability to practice open and reproducible research.
 
-Our goal is to create a very basic publication workflow with pydoit. The
-final pipeline will download the data, create a graph, and compile the
-document with pandoc, providing a basic framework for publishing a
-reproducible paper.
+For the practically minded, workflow automation can help:
 
-    .. rubric:: Prerequisites
-       :name: prerequisites
-       :class: prereq
+    - Save time rerunning analyses and adding replicates to computation studies.
+    - Save computational resources by only running analysis tasks when needed.
+    - Self-document your workflow for others.
+    - Reduce errors in your analyses by clearly defining *and* executing them step by step.
+    - Make you happier and more smug.
+
+Prerequisites
+*************
 
     -  Intermediate python knowledge.
-    -  Intermediate shell proficiency.
+    -  Beginner to intermediate shell proficiency.
     -  The ability to install python packages.
     -  Familiarity with your favorite text editor. The demo will be on
        vim, but use what you're comfortable with.
 
-    .. rubric:: Setup
-       :name: setup
-       :class: prereq
+Setup
+*****
 
     -  Make sure you have Python.
     -  Install the necessary python libraries. If you are using
@@ -40,10 +43,14 @@ reproducible paper.
 Topics
 ------
 
-1. `Background and Basics <01-basics.html>`__
-2. `Targets <02-targets.html>`__
-3. `Dependencies and Task Status <03-dependencies.html>`__
-4. `Python Tasks <04-python.html>`__
-5. `Cleaning <05-cleanup.html>`__
-6. `Subtasks <06-subtasks.html>`__
-7. `Finishing Up <07-finishing-up.html>`__
+.. toctree::
+    :maxdepth: 1
+
+    01-basics
+    02-targets
+    03-dependencies
+    04-python
+    05-cleanup
+    06-subtasks
+    07-finishing-up
+

@@ -6,11 +6,15 @@ Background and Basics
     -  Discuss the build system
     -  Write a pydoit hello world
 
+If you've made it this far, I will assume you've been convinced and are prepared to receive
+your happiness and smugness, and are ready to dive into doit. 
+
 -  Pydoit it is a task management and automation tool
--  It is similar to build systems like make (comparison:
-   http://swcarpentry.github.io/bc/intermediate/doit/make-vs-doit.html)
+-  It is similar to build systems like make
 -  Tasks are defined individually and executed in order according to
    dependencies, via a directed acyclic graph
+
+.. seealso:: `A comparison between GNU Make and pydoit by Software Carpentry <http://swcarpentry.github.io/bc/intermediate/doit/make-vs-doit.html>`__
 
 For me, it helps to immediately get started with an example. The basic
 building blocks of a pydoit workflow are tasks, which encode the work we
