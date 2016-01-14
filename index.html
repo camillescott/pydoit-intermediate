@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pydoit for automation &mdash; pydoit for automation 1.0 documentation</title>
+    <title>(py)doit for automation &mdash; pydoit for automation 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="pydoit for automation 1.0 documentation" href="#" />
+    <link rel="next" title="Background and Basics" href="01-basics.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -36,32 +37,43 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="pydoit-for-automation">
-<h1>pydoit for automation<a class="headerlink" href="#pydoit-for-automation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="py-doit-for-automation">
+<h1>(py)doit for automation<a class="headerlink" href="#py-doit-for-automation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="an-intermediate-python-workshop">
 <h2>an intermediate python workshop<a class="headerlink" href="#an-intermediate-python-workshop" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>Open science, reproducible science is good</li>
-<li>We can help make our work reproducible by automating it</li>
-<li>Automation can be tricky and time consuming, so we need tools to help
-make it easier</li>
-<li>Pydoit!</li>
-</ul>
-<p>Our goal is to create a very basic publication workflow with pydoit. The
-final pipeline will download the data, create a graph, and compile the
-document with pandoc, providing a basic framework for publishing a
-reproducible paper.</p>
+<p>This workshop will teach students how to make use of <a class="reference external" href="http://pydoit.org/index.html">doit</a>
+for workflow automation. To accomplish this goal, students will be walked through the creation of
+a very basic publication pipeline, which will download data, create a graph, and compile the
+document into a PDF with <a class="reference external" href="http://jinja.pocoo.org/docs/dev/">jinja2</a> and
+<a class="reference external" href="http://pandoc.org/index.html">pandoc</a>. This means that in addition
+to data analysis workflows, students will have a good idea of how to get started with
+reproducible documents, improving their ability to practice open and reproducible research.</p>
+<p>For the practically minded, workflow automation can help:</p>
 <blockquote>
-<div><p class="prereq rubric" id="prerequisites">Prerequisites</p>
-<ul class="simple">
+<div><ul class="simple">
+<li>Save time rerunning analyses and adding replicates to computation studies.</li>
+<li>Save computational resources by only running analysis tasks when needed.</li>
+<li>Self-document your workflow for others.</li>
+<li>Reduce errors in your analyses by clearly defining <em>and</em> executing them step by step.</li>
+<li>Make you happier and more smug.</li>
+</ul>
+</div></blockquote>
+<div class="section" id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
 <li>Intermediate python knowledge.</li>
-<li>Intermediate shell proficiency.</li>
+<li>Beginner to intermediate shell proficiency.</li>
 <li>The ability to install python packages.</li>
 <li>Familiarity with your favorite text editor. The demo will be on
 vim, but use what you&#8217;re comfortable with.</li>
 </ul>
-<p class="prereq rubric" id="setup">Setup</p>
-<ul class="simple">
+</div></blockquote>
+</div>
+<div class="section" id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
 <li>Make sure you have Python.</li>
 <li>Install the necessary python libraries. If you are using
 Anaconda, you should have several of these already, and can
@@ -72,17 +84,20 @@ dependencies with <code class="docutils literal"><span class="pre">pip</span> <s
 </ul>
 </div></blockquote>
 </div>
+</div>
 <div class="section" id="topics">
 <h2>Topics<a class="headerlink" href="#topics" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic simple">
-<li><a class="reference external" href="01-basics.html">Background and Basics</a></li>
-<li><a class="reference external" href="02-targets.html">Targets</a></li>
-<li><a class="reference external" href="03-dependencies.html">Dependencies and Task Status</a></li>
-<li><a class="reference external" href="04-python.html">Python Tasks</a></li>
-<li><a class="reference external" href="05-cleanup.html">Cleaning</a></li>
-<li><a class="reference external" href="06-subtasks.html">Subtasks</a></li>
-<li><a class="reference external" href="07-finishing-up.html">Finishing Up</a></li>
-</ol>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="01-basics.html">Background and Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-targets.html">Targets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-dependencies.html">Dependencies and Task Status</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-python.html">Python Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-cleanup.html">Cleaning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-subtasks.html">Subtasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-finishing-up.html">Finishing Up</a></li>
+</ul>
+</div>
 </div>
 </div>
 
@@ -94,8 +109,12 @@ dependencies with <code class="docutils literal"><span class="pre">pip</span> <s
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">pydoit for automation</a><ul>
-<li><a class="reference internal" href="#an-intermediate-python-workshop">an intermediate python workshop</a></li>
+<li><a class="reference internal" href="#">(py)doit for automation</a><ul>
+<li><a class="reference internal" href="#an-intermediate-python-workshop">an intermediate python workshop</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#topics">Topics</a></li>
 </ul>
 </li>
@@ -104,6 +123,7 @@ dependencies with <code class="docutils literal"><span class="pre">pip</span> <s
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="01-basics.html" title="next chapter">Background and Basics</a></li>
   </ul></li>
 </ul>
 </div>
