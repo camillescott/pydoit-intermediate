@@ -2,8 +2,6 @@ Cleaning
 ========
 
     .. rubric:: Learning Objectives
-       :name: learning-objectives
-       :class: objectives
 
     -  Learn how to use the ``clean`` attribute.
     -  Define a custom clean function.
@@ -19,7 +17,7 @@ extremely useful function for this, called ``clean_targets``, which just
 goes ahead and ``rm``'s the target for that task. Here's what it looks
 like included in our humble download task.
 
-.. code:: python
+    .. code:: python
 
     from doit.task include clean_targets
 
@@ -33,9 +31,7 @@ Now, if we run ``doit clean``, the data file will be removed; if we run
 ``doit``, all the tasks will be rerun, because they all depend directly
 or indirectly on the downloaded data file.
 
-    .. rubric:: Cleaning targets
-       :name: cleaning-targets
-       :class: callout
+    .. note::
 
     Pydoit's creator clearly saw that removing the targets would be an
     extremely common task. As such, one does not actually need to import
@@ -49,7 +45,7 @@ or indirectly on the downloaded data file.
 For example, we might want to inform the user where the pipeline got the
 file they just blew away.
 
-.. code:: python
+    .. code:: python
 
     DATA_URL = 'https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz'
 
@@ -67,8 +63,6 @@ The ``clean`` attribute takes the same form as ``actions`` or even
 ``uptodate``, and so can also be a string to be executed in the shell.
 
     .. rubric:: Clean all the things
-       :name: clean-all-the-things
-       :class: challenge
 
     Add ``clean`` attributes to all the currently defined tasks. If
     you'd like, get creative with your attributes. Include two clean

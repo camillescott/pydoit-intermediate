@@ -39,7 +39,7 @@
   <div class="section" id="targets">
 <h1>Targets<a class="headerlink" href="#targets" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p class="objectives rubric" id="learning-objectives">Learning Objectives</p>
+<div><p class="rubric">Learning Objectives</p>
 <ul class="simple">
 <li>Write a task to download the example data.</li>
 <li>Understand how targets work.</li>
@@ -55,9 +55,8 @@ own, but we can easily remove this necessity by automating the process
 with curl.</p>
 <p>If we just doing this on the command line, our command would look
 something like this:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz
-</pre></div>
-</div>
+<blockquote>
+<div>$ curl -OL <a class="reference external" href="https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz">https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz</a></div></blockquote>
 <p>What is going on in this command? It runs a program, <code class="docutils literal"><span class="pre">curl</span></code>, giving it
 a URL, and creates a file, <code class="docutils literal"><span class="pre">Melee_data.csv</span></code>. If we look at the command
 as a task to complete, this file is that task&#8217;s output, and if this file
@@ -65,27 +64,32 @@ exists already, we can safely assume that the command has been run. In
 doit lingo, we call it the task&#8217;s <em>target</em>, and we call the command
 itself the task&#8217;s <em>action</em>. Based on the previous section, you might be
 able to guess what this task would look like.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span><span class="p">],</span>
-            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">]}</span>
-</pre></div>
-</div>
+<blockquote>
+<div><dl class="docutils">
+<dt>def task_download_data():</dt>
+<dd><dl class="first last docutils">
+<dt>return {&#8216;actions&#8217;: [&#8216;curl -OL <a class="reference external" href="https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz">https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz</a>&#8216;],</dt>
+<dd>&#8216;targets&#8217;: [&#8216;Melee_data.csv.gz&#8217;]}</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
 <p>Open your <code class="docutils literal"><span class="pre">dodo.py</span></code> and add this function to it. Save and run the
 <code class="docutils literal"><span class="pre">doit</span></code> command. You&#8217;ll see the task output, followed by the normal
 output you&#8217;d expect from <code class="docutils literal"><span class="pre">curl</span></code>.</p>
+<blockquote>
+<div>.  download_data</div></blockquote>
 <p>The dot means that the task was executed. If we run <code class="docutils literal"><span class="pre">doit</span></code> again, the
 task will run again. This is because we have specified no dependencies,
 and doit will determine that the task is never up to date; we will learn
 about dependencies in the next section.</p>
 <blockquote>
-<div><p class="callout rubric" id="the-doit-command">The doit command</p>
-<p>When we run <code class="docutils literal"><span class="pre">doit</span></code>, the current directory is searched for a file
+<div>When we run <code class="docutils literal"><span class="pre">doit</span></code>, the current directory is searched for a file
 named <code class="docutils literal"><span class="pre">dodo.py</span></code>. That file is searched for tasks which are
 executed. Those familiar with <code class="docutils literal"><span class="pre">make</span></code> might have noticed some
 similarity, where typing <code class="docutils literal"><span class="pre">make</span></code> will search the current directoy
 for a file named <code class="docutils literal"><span class="pre">Makefile</span></code>. We will cover alternative ways to
-execute your doit tasks later on.</p>
-</div></blockquote>
+execute your doit tasks later on.</div></blockquote>
 </div>
 
 

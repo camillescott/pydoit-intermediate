@@ -39,7 +39,7 @@
   <div class="section" id="subtasks">
 <h1>Subtasks<a class="headerlink" href="#subtasks" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p class="objectives rubric" id="learning-objectives">Learning Objectives</p>
+<div><p class="rubric">Learning Objectives</p>
 <ul class="simple">
 <li>Introduce subtasks.</li>
 <li>Add a document templating task.</li>
@@ -66,26 +66,30 @@ currently, it only downloads a single file. &#8220;Surely,&#8221; you say, &#822
 task must be capable of downloading other files!&#8221; And you would be
 correct! We can use <em>subtasks</em> to generate multiple tasks from the same
 task function.</p>
-<div class="code python highlight-python"><div class="highlight"><pre>import os
-from doit.task include clean_targets
-
-DATA_URLS = [&#39;https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.document.md.tpl&#39;,
-             &#39;https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;]
-
-def task_download_data():
-
-    def print_url(URL):
-        print &#39;File was retrieved from: {0}&#39;.format(URL)
-
-    for URL in DATA_URLS:
-        target = os.path.basename(URL)
-        yield {&#39;name&#39;: &#39;download:{0}&#39;.format(target),
-               &#39;actions&#39;: [&#39;curl -OL {0}&#39;.format(URL)],
-               &#39;targets&#39;: [target],
-               &#39;uptodate&#39;: [run_once],
-               &#39;clean&#39;: [clean_targets, (print_url, [URL])]}
-</pre></div>
-</div>
+<blockquote>
+<div><p>import os
+from doit.task include clean_targets</p>
+<dl class="docutils">
+<dt>DATA_URLS = [&#8216;<a class="reference external" href="https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.document.md.tpl">https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.document.md.tpl</a>&#8216;,</dt>
+<dd>&#8216;<a class="reference external" href="https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz">https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz</a>&#8216;]</dd>
+</dl>
+<p>def task_download_data():</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>def print_url(URL):</dt>
+<dd>print &#8216;File was retrieved from: {0}&#8217;.format(URL)</dd>
+<dt>for URL in DATA_URLS:</dt>
+<dd><p class="first">target = os.path.basename(URL)
+yield {&#8216;name&#8217;: &#8216;download:{0}&#8217;.format(target),</p>
+<blockquote class="last">
+<div>&#8216;actions&#8217;: [&#8216;curl -OL {0}&#8217;.format(URL)],
+&#8216;targets&#8217;: [target],
+&#8216;uptodate&#8217;: [run_once],
+&#8216;clean&#8217;: [clean_targets, (print_url, [URL])]}</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
 <p>We&#8217;ve made a number of changes here, but most important is that we&#8217;ve
 switched to using a generator object instead of a normal function. For
 those of you not familiar with generators, the generator is signified by
@@ -99,35 +103,43 @@ in order to resolve dependencies.</p>
 <p>Now that we have the task to download the template file, we&#8217;ll add one
 to compile the template into a markdown file. This is another python
 task, which will include much of what we&#8217;ve gone over already.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">jinja2</span>
-
-<span class="c"># ... the other tasks ...</span>
-
-<span class="k">def</span> <span class="nf">task_build_markdown_file</span><span class="p">():</span>
-
-    <span class="k">def</span> <span class="nf">do_build</span><span class="p">(</span><span class="n">targets</span><span class="p">):</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;.tpl&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-            <span class="n">template</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-            <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">author</span><span class="o">=</span><span class="s">&#39;Your Name&#39;</span><span class="p">,</span>
-                                     <span class="n">affiliation</span><span class="o">=</span><span class="s">&#39;Your Institution&#39;</span><span class="p">,</span>
-                                     <span class="n">date</span><span class="o">=</span><span class="s">&#39;Jan 20, 2016&#39;</span><span class="p">,</span>
-                                     <span class="n">heatmap_filename</span><span class="o">=</span><span class="s">&#39;Melee_data.csv.heatmap.pdf&#39;</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">do_build</span><span class="p">],</span>
-            <span class="s">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.heatmap.pdf&#39;</span><span class="p">,</span>
-                         <span class="s">&#39;Melee_data.csv.document.md.tpl&#39;</span><span class="p">],</span>
-            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.document.md&#39;</span><span class="p">],</span>
-            <span class="s">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">]}</span>
-</pre></div>
-</div>
+<blockquote>
+<div><p>import jinja2</p>
+<p># ... the other tasks ...</p>
+<p>def task_build_markdown_file():</p>
+<blockquote>
+<div><p>def do_build(targets):</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>with open(targets[0] + &#8216;.tpl&#8217;) as fp:</dt>
+<dd>template = jinja2.Template(fp.read())</dd>
+<dt>with open(targets[0], &#8216;wb&#8217;) as fp:</dt>
+<dd><dl class="first last docutils">
+<dt>fp.write(template.render(author=&#8217;Your Name&#8217;,</dt>
+<dd>affiliation=&#8217;Your Institution&#8217;,
+date=&#8217;Jan 20, 2016&#8217;,
+heatmap_filename=&#8217;Melee_data.csv.heatmap.pdf&#8217;))</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>return {&#8216;actions&#8217;: [do_build],</dt>
+<dd><dl class="first docutils">
+<dt>&#8216;file_dep&#8217;: [&#8216;Melee_data.csv.heatmap.pdf&#8217;,</dt>
+<dd>&#8216;Melee_data.csv.document.md.tpl&#8217;],</dd>
+</dl>
+<p class="last">&#8216;targets&#8217;: [&#8216;Melee_data.csv.document.md&#8217;],
+&#8216;clean&#8217;: [clean_targets]}</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
 <p>This task creates a jinja2 <code class="docutils literal"><span class="pre">Template</span></code> object from the template file we
 downloaded, then renders it into its final form by passing in a number
 of keyword arguments.</p>
 <blockquote>
-<div><p class="challenge rubric" id="fun-with-templates">Fun with Templates</p>
+<div><p class="rubric">Fun with Templates</p>
 <p>Although templating isn&#8217;t specific to pydoit, you may find jinja2
 quite useful. Try playing around with the template <code class="docutils literal"><span class="pre">.tpl</span></code> file and
 adding your own content to it. Can you see how to to add additional
