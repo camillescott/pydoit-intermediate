@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Dependencies and Task Status &mdash; pydoit for automation 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pydoit for automation 1.0 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="dependencies-and-task-status">
+<h1>Dependencies and Task Status<a class="headerlink" href="#dependencies-and-task-status" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p class="objectives rubric" id="learning-objectives">Learning Objectives</p>
+<ul class="simple">
+<li>Introduce task <code class="docutils literal"><span class="pre">uptodate</span></code></li>
+<li>Introduce file dependencies</li>
+</ul>
+</div></blockquote>
+<p>If you run <code class="docutils literal"><span class="pre">doit</span></code> again, you&#8217;ll notice that you get the same output as
+before &#8211; the dot and task name indicating that the task was run again.
+Preferably, we&#8217;d like the task not to run once it already has (the file
+might be large, for example). pydoit handles this two ways: through
+dependencies and the <code class="docutils literal"><span class="pre">uptodate</span></code> function. <em>File dependencies</em> are
+quite intuitive. The task names the files it depends on, and if any of
+those change, the task is rerun. Our download command already adds a bit
+of complexity though, because it does not depend on any files. This is
+where <code class="docutils literal"><span class="pre">uptodate</span></code> comes in.</p>
+<p><code class="docutils literal"><span class="pre">uptodate</span></code> is another entry in the task dictionary. It is a list of
+booleans, callables (that is, functions), or strings specifying shell
+commands. If any of the <code class="docutils literal"><span class="pre">uptodate</span></code> items evaluates to <code class="docutils literal"><span class="pre">False</span></code>, the
+task is not run.</p>
+<p>For our download task, we are going to use a function which is included
+in the doit library, <code class="docutils literal"><span class="pre">run_once</span></code>. As one might expect, this makes sure
+the task is run at least once. Let&#8217;s add it to our <code class="docutils literal"><span class="pre">dodo.py</span></code>.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">doit.tools</span> <span class="kn">import</span> <span class="n">run_once</span>
+
+<span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span><span class="p">],</span>
+            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">],</span>
+            <span class="s">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>Now if we run <code class="docutils literal"><span class="pre">doit</span></code> again (twice more, actually), our output will
+change.</p>
+<p>The dash-dash indicates that the task was determined to be up to date,
+and was not executed.</p>
+<blockquote>
+<div><p class="callout rubric" id="task-names">Task Names</p>
+<p>By default, the task name will be taken from the function defining
+it. We can also define our own task names with the <code class="docutils literal"><span class="pre">name</span></code> entry in
+the task dictionary.</p>
+</div></blockquote>
+<p>doit&#8217;s system for determining whether a task is up to date is actually
+somewhat complex. The
+<a class="reference external" href="http://pydoit.org/dependencies.html#doit-up-to-date-definition">documentation</a>
+provides a more detailed list of conditions where a task is <strong>not</strong> up
+to date:</p>
+<ul class="simple">
+<li>An uptodate item is (or evaluates to) <code class="docutils literal"><span class="pre">False</span></code></li>
+<li>A file is added to or removed from file_dep</li>
+<li>A file_dep changed since last successful execution</li>
+<li>A target path does not exist</li>
+<li>A task has no file_dep and uptodate item equal to <code class="docutils literal"><span class="pre">True</span></code></li>
+</ul>
+<p>The last of these explains why we need to include the <code class="docutils literal"><span class="pre">uptodate</span></code> entry
+in our download task; it has no file dependencies, and so will always be
+considered out of date, even if the target exists.</p>
+<blockquote>
+<div><p class="challenge rubric" id="experimenting-with-uptodate">Experimenting with uptodate</p>
+<p>What would happen if we changed <code class="docutils literal"><span class="pre">uptodate</span></code> to <code class="docutils literal"><span class="pre">[True]</span></code>? How
+about <code class="docutils literal"><span class="pre">[False]</span></code>?</p>
+</div></blockquote>
+<p>Now that we know more about how tasks are considered up to date, let&#8217;s
+introduce a file dependency. The file we downloaded was a gzip archive,
+so we&#8217;ll write a task to extract it. The command we would run in the
+shell might be:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ gunzip Melee_data.csv.gz
+</pre></div>
+</div>
+<p>This would produce a file called <code class="docutils literal"><span class="pre">Melee_data.csv</span></code>. We can see then
+that we have a <em>target</em> (<code class="docutils literal"><span class="pre">Melee_data.csv</span></code>), an <em>action</em> (running
+<code class="docutils literal"><span class="pre">gunzip</span></code>), and a <em>file dependency</em> (<code class="docutils literal"><span class="pre">Melee_data.csv.gz</span></code>). Let&#8217;s add
+the task to our <code class="docutils literal"><span class="pre">dodo.py</span></code>.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">task_gunzip_data</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;gunzip -c </span><span class="si">%(dependencies)s</span><span class="s"> &gt; </span><span class="si">%(targets)s</span><span class="s">&#39;</span><span class="p">],</span>
+            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv&#39;</span><span class="p">],</span>
+            <span class="s">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>On top of the file dependency, this task also introduces <em>automatic
+variables</em>. These are in the <code class="docutils literal"><span class="pre">actions</span></code> string, and are recognized by
+the task creator. This removes redundancy and saves us some code.</p>
+<p>When we run <code class="docutils literal"><span class="pre">doit</span></code>, we get output showing that only the gunzip task
+was executed.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/03-dependencies.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Camille Scott.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/03-dependencies.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

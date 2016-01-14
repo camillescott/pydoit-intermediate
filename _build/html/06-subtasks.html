@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Subtasks &mdash; pydoit for automation 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pydoit for automation 1.0 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="subtasks">
+<h1>Subtasks<a class="headerlink" href="#subtasks" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p class="objectives rubric" id="learning-objectives">Learning Objectives</p>
+<ul class="simple">
+<li>Introduce subtasks.</li>
+<li>Add a document templating task.</li>
+</ul>
+</div></blockquote>
+<p>We&#8217;ve defined tasks to download our data, gunzip it, and plot it.
+However, our original goal was to create a publication pipeline, so we
+should get on with it!</p>
+<p>The file actually defining our paper will be written in
+<a class="reference external" href="https://daringfireball.net/projects/markdown/">markdown</a>. For the
+unititiated, markdown is an extremely simply markup language (like HTML)
+designed with the goal of being human readable. Eventually we&#8217;ll be
+using pandoc to compile the markdown document into our format of choice.
+However, before we do any of that, we need to add our image file and
+other information to the markdown document. We could just include these
+things directly in the file, but we&#8217;re cooler than that &#8211; we want to do
+it dynamically. We&#8217;ll use the
+<a class="reference external" href="http://jinja.pocoo.org/docs/dev/">jinja2</a> templating library to
+build our markdown document dynamically.</p>
+<p>Given that this is a course on pydoit and not jinja2, it would be best
+if we downloaded the jinja2 template rather than writing it ourselves.
+Convenienty, we already have a task for downloading things &#8211; but
+currently, it only downloads a single file. &#8220;Surely,&#8221; you say, &#8220;this
+task must be capable of downloading other files!&#8221; And you would be
+correct! We can use <em>subtasks</em> to generate multiple tasks from the same
+task function.</p>
+<div class="code python highlight-python"><div class="highlight"><pre>import os
+from doit.task include clean_targets
+
+DATA_URLS = [&#39;https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.document.md.tpl&#39;,
+             &#39;https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;]
+
+def task_download_data():
+
+    def print_url(URL):
+        print &#39;File was retrieved from: {0}&#39;.format(URL)
+
+    for URL in DATA_URLS:
+        target = os.path.basename(URL)
+        yield {&#39;name&#39;: &#39;download:{0}&#39;.format(target),
+               &#39;actions&#39;: [&#39;curl -OL {0}&#39;.format(URL)],
+               &#39;targets&#39;: [target],
+               &#39;uptodate&#39;: [run_once],
+               &#39;clean&#39;: [clean_targets, (print_url, [URL])]}
+</pre></div>
+</div>
+<p>We&#8217;ve made a number of changes here, but most important is that we&#8217;ve
+switched to using a generator object instead of a normal function. For
+those of you not familiar with generators, the generator is signified by
+the <code class="docutils literal"><span class="pre">yield</span></code> keyword, which takes the place of a <code class="docutils literal"><span class="pre">return</span></code> keyword.
+Because this function has a <code class="docutils literal"><span class="pre">yield</span></code>, it becomes a generator and can be
+iterated over, for example, with a <code class="docutils literal"><span class="pre">for</span></code> loop. For pydoit
+specifically, this means it can yield multiple tasks, one for each in
+the <code class="docutils literal"><span class="pre">DATA_URLS</span></code> list. We&#8217;ve also included a <code class="docutils literal"><span class="pre">name</span></code> attribute; this
+is necessary because pydoit needs the ability to uniquely identify tasks
+in order to resolve dependencies.</p>
+<p>Now that we have the task to download the template file, we&#8217;ll add one
+to compile the template into a markdown file. This is another python
+task, which will include much of what we&#8217;ve gone over already.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">jinja2</span>
+
+<span class="c"># ... the other tasks ...</span>
+
+<span class="k">def</span> <span class="nf">task_build_markdown_file</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="nf">do_build</span><span class="p">(</span><span class="n">targets</span><span class="p">):</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;.tpl&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">author</span><span class="o">=</span><span class="s">&#39;Your Name&#39;</span><span class="p">,</span>
+                                     <span class="n">affiliation</span><span class="o">=</span><span class="s">&#39;Your Institution&#39;</span><span class="p">,</span>
+                                     <span class="n">date</span><span class="o">=</span><span class="s">&#39;Jan 20, 2016&#39;</span><span class="p">,</span>
+                                     <span class="n">heatmap_filename</span><span class="o">=</span><span class="s">&#39;Melee_data.csv.heatmap.pdf&#39;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">do_build</span><span class="p">],</span>
+            <span class="s">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.heatmap.pdf&#39;</span><span class="p">,</span>
+                         <span class="s">&#39;Melee_data.csv.document.md.tpl&#39;</span><span class="p">],</span>
+            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.document.md&#39;</span><span class="p">],</span>
+            <span class="s">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>This task creates a jinja2 <code class="docutils literal"><span class="pre">Template</span></code> object from the template file we
+downloaded, then renders it into its final form by passing in a number
+of keyword arguments.</p>
+<blockquote>
+<div><p class="challenge rubric" id="fun-with-templates">Fun with Templates</p>
+<p>Although templating isn&#8217;t specific to pydoit, you may find jinja2
+quite useful. Try playing around with the template <code class="docutils literal"><span class="pre">.tpl</span></code> file and
+adding your own content to it. Can you see how to to add additional
+fields?</p>
+</div></blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/06-subtasks.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Camille Scott.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/06-subtasks.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

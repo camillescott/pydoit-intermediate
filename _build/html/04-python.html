@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Python Tasks &mdash; pydoit for automation 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pydoit for automation 1.0 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="python-tasks">
+<h1>Python Tasks<a class="headerlink" href="#python-tasks" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p class="objectives rubric" id="learning-objectives">Learning Objectives</p>
+<ul class="simple">
+<li>Write a Python task</li>
+<li>Expand on automatic variables</li>
+</ul>
+</div></blockquote>
+<p>So far, we have downloaded the data and gunzipped it. Both of those
+tasks were simple shell commands. However, pydoit can do much more than
+that; actions can also be arbitrary python code. We will take advantage
+of that to do some &#8220;analysis&#8221; of our Super Smash Bros data and generate
+a plot.</p>
+<p>Python tasks are defined in the same way as any other task, but the
+actions entry will include a function name instead. Python lets us
+define functions within functions and access variables from the outer
+function&#8217;s namespace (there are called closures, which are beyond the
+scope of this workshop); to make things simpler, we&#8217;ll define our task
+this way.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">task_plot_heatmap</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="nf">do_plot</span><span class="p">(</span><span class="n">file_dep</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+        <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+
+        <span class="c"># Read the data in a DataFrame</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_dep</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c"># Make a heatmap and dendrogram with seaborn</span>
+        <span class="n">clst</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">clustermap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">square</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                              <span class="n">method</span><span class="o">=</span><span class="s">&#39;ward&#39;</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row_cluster</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">clst</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">do_plot</span><span class="p">],</span>
+            <span class="s">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv&#39;</span><span class="p">],</span>
+            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.heatmap.pdf&#39;</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>The python action takes two parameters &#8211; <code class="docutils literal"><span class="pre">file_dep</span></code> and <code class="docutils literal"><span class="pre">targets</span></code>.
+These behave similarly to the <em>automatic variables</em> we accessed earlier,
+but instead the actual python objects are passed to the function and can
+be accessed. It is important to note that only the task function
+<code class="docutils literal"><span class="pre">task_plot_heatmap</span></code> is executed immediately when we run the pipeline;
+the <code class="docutils literal"><span class="pre">do_plot</span></code> function will be defined, and then only executed when
+and if the task is determined to be out of date.</p>
+<p>Run it and take a look at the output.</p>
+<p>Well that sucks.</p>
+<p>It&#8217;s likely that your labels are all garbled and overlapping. Let&#8217;s add
+some code to fix them and rerun it.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">task_plot_heatmap</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="nf">do_plot</span><span class="p">(</span><span class="n">dependencies</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+        <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">clst</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">clustermap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">square</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                              <span class="n">method</span><span class="o">=</span><span class="s">&#39;ward&#39;</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row_cluster</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="c"># We like pretty charts, so rotate the labels</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">clst</span><span class="o">.</span><span class="n">ax_heatmap</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">get_majorticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">clst</span><span class="o">.</span><span class="n">ax_heatmap</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">get_majorticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+        <span class="n">clst</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">do_plot</span><span class="p">],</span>
+            <span class="s">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv&#39;</span><span class="p">],</span>
+            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.heatmap.pdf&#39;</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>It didn&#8217;t run! That&#8217;s because we didn&#8217;t change any of the targets or
+dependencies, so as far as doit is concerned, nothing has changed. Not
+having the dodo file be a dependency is a design decision defended in
+the documentation; in order to regenerate the plot, you&#8217;ll have to
+<code class="docutils literal"><span class="pre">rm</span></code> the PDF file and run doit again.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/04-python.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Camille Scott.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/04-python.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

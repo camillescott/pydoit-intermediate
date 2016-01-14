@@ -1,11 +1,7 @@
----
-layout: page
-title: Doit basics
-subtitle: 
-minutes: 20
----
+Background and Basics
+=====================
 
-> ## Learning Objectives {.objectives}
+> ## Learning Objectives 
 >
 > * Discuss the build system
 > * Write a pydoit hello world
@@ -19,7 +15,7 @@ For me, it helps to immediately get started with an example. The basic building
 blocks of a pydoit workflow are tasks, which encode the work we would like to get
 done. Here is an extremely simple task:
 
-~~~ {.python}
+~~~
 def task_hello_world():
     return {'actions': ['echo "hello world!" > hello.txt'],
             'targets': ['hello.txt']}
@@ -31,7 +27,7 @@ actual commands we'd like to run, in this case, a single shell command.
 The `targets` entry is a list of the files output by this task.
 
 
-> ## Testing your installation {.challenge}
+> ## Testing your installation
 > 
 > Create a working directory, and within it, create a script named
 > dodo.py. Copy the above function into it, save, and close. Then, move
