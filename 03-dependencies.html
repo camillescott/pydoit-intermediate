@@ -61,23 +61,19 @@ task is not run.</p>
 <p>For our download task, we are going to use a function which is included
 in the doit library, <code class="docutils literal"><span class="pre">run_once</span></code>. As one might expect, this makes sure
 the task is run at least once. Let&#8217;s add it to our <code class="docutils literal"><span class="pre">dodo.py</span></code>.</p>
-<blockquote>
-<div><p>from doit.tools import run_once</p>
-<dl class="docutils">
-<dt>def task_download_data():</dt>
-<dd><dl class="first last docutils">
-<dt>return {&#8216;actions&#8217;: [&#8216;curl -OL <a class="reference external" href="https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz">https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz</a>&#8216;],</dt>
-<dd>&#8216;targets&#8217;: [&#8216;Melee_data.csv.gz&#8217;],
-&#8216;uptodate&#8217;: [run_once]}</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">doit.tools</span> <span class="kn">import</span> <span class="n">run_once</span>
+
+<span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span><span class="p">],</span>
+            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">],</span>
+            <span class="s">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">]}</span>
+</pre></div>
+</div>
 <p>Now if we run <code class="docutils literal"><span class="pre">doit</span></code> again (twice more, actually), our output will
 change.</p>
-<blockquote>
-<div><p class="attribution">&mdash;download_data</p>
-</div></blockquote>
+<div class="code bash highlight-python"><div class="highlight"><pre><span class="o">--</span> <span class="n">download_data</span>
+</pre></div>
+</div>
 <p>The dash-dash indicates that the task was determined to be up to date,
 and was not executed.</p>
 <blockquote>
@@ -108,32 +104,28 @@ about <code class="docutils literal"><span class="pre">[False]</span></code>?</p
 introduce a file dependency. The file we downloaded was a gzip archive,
 so we&#8217;ll write a task to extract it. The command we would run in the
 shell might be:</p>
-<blockquote>
-<div>$ gunzip Melee_data.csv.gz</div></blockquote>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ gunzip Melee_data.csv.gz
+</pre></div>
+</div>
 <p>This would produce a file called <code class="docutils literal"><span class="pre">Melee_data.csv</span></code>. We can see then
 that we have a <em>target</em> (<code class="docutils literal"><span class="pre">Melee_data.csv</span></code>), an <em>action</em> (running
 <code class="docutils literal"><span class="pre">gunzip</span></code>), and a <em>file dependency</em> (<code class="docutils literal"><span class="pre">Melee_data.csv.gz</span></code>). Let&#8217;s add
 the task to our <code class="docutils literal"><span class="pre">dodo.py</span></code>.</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>def task_gunzip_data():</dt>
-<dd><dl class="first last docutils">
-<dt>return {&#8216;actions&#8217;: [&#8216;gunzip -c %(dependencies)s &gt; %(targets)s&#8217;],</dt>
-<dd>&#8216;targets&#8217;: [&#8216;Melee_data.csv&#8217;],
-&#8216;file_dep&#8217;: [&#8216;Melee_data.csv.gz&#8217;]}</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">task_gunzip_data</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;gunzip -c </span><span class="si">%(dependencies)s</span><span class="s"> &gt; </span><span class="si">%(targets)s</span><span class="s">&#39;</span><span class="p">],</span>
+            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv&#39;</span><span class="p">],</span>
+            <span class="s">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">]}</span>
+</pre></div>
+</div>
 <p>On top of the file dependency, this task also introduces <em>automatic
 variables</em>. These are in the <code class="docutils literal"><span class="pre">actions</span></code> string, and are recognized by
 the task creator. This removes redundancy and saves us some code.</p>
 <p>When we run <code class="docutils literal"><span class="pre">doit</span></code>, we get output showing that only the gunzip task
 was executed.</p>
-<blockquote>
-<div><p class="attribution">&mdash;download_data
-.  gunzip_data</p>
-</div></blockquote>
+<div class="code highlight-python"><div class="highlight"><pre>-- download_data
+.  gunzip_data
+</pre></div>
+</div>
 </div>
 
 

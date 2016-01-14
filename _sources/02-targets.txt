@@ -18,7 +18,7 @@ with curl.
 If we just doing this on the command line, our command would look
 something like this:
 
-    .. code:: bash
+.. code:: bash
 
     $ curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz 
 
@@ -30,7 +30,7 @@ doit lingo, we call it the task's *target*, and we call the command
 itself the task's *action*. Based on the previous section, you might be
 able to guess what this task would look like.
 
-    .. code:: python
+.. code:: python
 
     def task_download_data():
         return {'actions': ['curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz'],
@@ -40,7 +40,7 @@ Open your ``dodo.py`` and add this function to it. Save and run the
 ``doit`` command. You'll see the task output, followed by the normal
 output you'd expect from ``curl``.
 
-    .. code:: output
+.. code:: output
 
     .  download_data
 
