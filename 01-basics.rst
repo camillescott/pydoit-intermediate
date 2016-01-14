@@ -2,7 +2,6 @@ Background and Basics
 =====================
 
     .. rubric:: Learning Objectives
-       :name: learning-objectives
 
     -  Discuss the build system
     -  Write a pydoit hello world
@@ -15,9 +14,9 @@ Background and Basics
 
 For me, it helps to immediately get started with an example. The basic
 building blocks of a pydoit workflow are tasks, which encode the work we
-would like to get done. Here is an extremely simple task:
+would like to get done. Here is an extremely simple task.
 
-::
+    .. code:: python
 
     def task_hello_world():
         return {'actions': ['echo "hello world!" > hello.txt'],
@@ -30,7 +29,6 @@ shell command. The ``targets`` entry is a list of the files output by
 this task.
 
     .. rubric:: Testing your installation
-       :name: testing-your-installation
 
     Create a working directory, and within it, create a script named
     dodo.py. Copy the above function into it, save, and close. Then,
