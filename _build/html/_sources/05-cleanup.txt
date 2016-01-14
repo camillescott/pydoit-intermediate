@@ -17,7 +17,7 @@ extremely useful function for this, called ``clean_targets``, which just
 goes ahead and ``rm``'s the target for that task. Here's what it looks
 like included in our humble download task.
 
-    .. code:: python
+.. code:: python
 
     from doit.task include clean_targets
 
@@ -45,7 +45,7 @@ or indirectly on the downloaded data file.
 For example, we might want to inform the user where the pipeline got the
 file they just blew away.
 
-    .. code:: python
+.. code:: python
 
     DATA_URL = 'https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz'
 
