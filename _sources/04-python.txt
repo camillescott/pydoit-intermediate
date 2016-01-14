@@ -2,8 +2,6 @@ Python Tasks
 ============
 
     .. rubric:: Learning Objectives
-       :name: learning-objectives
-       :class: objectives
 
     -  Write a Python task
     -  Expand on automatic variables
@@ -21,7 +19,7 @@ function's namespace (there are called closures, which are beyond the
 scope of this workshop); to make things simpler, we'll define our task
 this way.
 
-.. code:: python
+    .. code:: python
 
     def task_plot_heatmap():
 
@@ -56,7 +54,7 @@ Well that sucks.
 It's likely that your labels are all garbled and overlapping. Let's add
 some code to fix them and rerun it.
 
-.. code:: python
+    .. code:: python
 
     def task_plot_heatmap():
 

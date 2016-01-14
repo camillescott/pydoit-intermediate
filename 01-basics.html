@@ -39,7 +39,7 @@
   <div class="section" id="background-and-basics">
 <h1>Background and Basics<a class="headerlink" href="#background-and-basics" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p class="rubric" id="learning-objectives">Learning Objectives</p>
+<div><p class="rubric">Learning Objectives</p>
 <ul class="simple">
 <li>Discuss the build system</li>
 <li>Write a pydoit hello world</li>
@@ -54,19 +54,24 @@ dependencies, via a directed acyclic graph</li>
 </ul>
 <p>For me, it helps to immediately get started with an example. The basic
 building blocks of a pydoit workflow are tasks, which encode the work we
-would like to get done. Here is an extremely simple task:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">task_hello_world</span><span class="p">():</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;echo &quot;hello world!&quot; &gt; hello.txt&#39;</span><span class="p">],</span>
-            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;hello.txt&#39;</span><span class="p">]}</span>
-</pre></div>
-</div>
+would like to get done. Here is an extremely simple task.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>def task_hello_world():</dt>
+<dd><dl class="first last docutils">
+<dt>return {&#8216;actions&#8217;: [&#8216;echo &#8220;hello world!&#8221; &gt; hello.txt&#8217;],</dt>
+<dd>&#8216;targets&#8217;: [&#8216;hello.txt&#8217;]}</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
 <p>The task is a python function prefixed with <code class="docutils literal"><span class="pre">task</span></code>, which returns a
 dictionary containing some predefined entries. The <code class="docutils literal"><span class="pre">actions</span></code> entry is
 a list of the actual commands we&#8217;d like to run, in this case, a single
 shell command. The <code class="docutils literal"><span class="pre">targets</span></code> entry is a list of the files output by
 this task.</p>
 <blockquote>
-<div><p class="rubric" id="testing-your-installation">Testing your installation</p>
+<div><p class="rubric">Testing your installation</p>
 <p>Create a working directory, and within it, create a script named
 dodo.py. Copy the above function into it, save, and close. Then,
 move to that directory and run <code class="docutils literal"><span class="pre">doit</span></code>. This should run the task

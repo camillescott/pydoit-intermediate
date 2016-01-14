@@ -2,8 +2,6 @@ Subtasks
 ========
 
     .. rubric:: Learning Objectives
-       :name: learning-objectives
-       :class: objectives
 
     -  Introduce subtasks.
     -  Add a document templating task.
@@ -32,7 +30,7 @@ task must be capable of downloading other files!" And you would be
 correct! We can use *subtasks* to generate multiple tasks from the same
 task function.
 
-.. code:: python
+    .. code:: python
 
     import os
     from doit.task include clean_targets
@@ -68,7 +66,7 @@ Now that we have the task to download the template file, we'll add one
 to compile the template into a markdown file. This is another python
 task, which will include much of what we've gone over already.
 
-.. code:: python
+    .. code:: python
 
     import jinja2
 
@@ -98,8 +96,6 @@ downloaded, then renders it into its final form by passing in a number
 of keyword arguments.
 
     .. rubric:: Fun with Templates
-       :name: fun-with-templates
-       :class: challenge
 
     Although templating isn't specific to pydoit, you may find jinja2
     quite useful. Try playing around with the template ``.tpl`` file and
