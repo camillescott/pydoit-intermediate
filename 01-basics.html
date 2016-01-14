@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Background and Basics &mdash; pydoit for automation 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pydoit for automation 1.0 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="background-and-basics">
+<h1>Background and Basics<a class="headerlink" href="#background-and-basics" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p class="rubric" id="learning-objectives">Learning Objectives</p>
+<ul class="simple">
+<li>Discuss the build system</li>
+<li>Write a pydoit hello world</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li>Pydoit it is a task management and automation tool</li>
+<li>It is similar to build systems like make (comparison:
+<a class="reference external" href="http://swcarpentry.github.io/bc/intermediate/doit/make-vs-doit.html">http://swcarpentry.github.io/bc/intermediate/doit/make-vs-doit.html</a>)</li>
+<li>Tasks are defined individually and executed in order according to
+dependencies, via a directed acyclic graph</li>
+</ul>
+<p>For me, it helps to immediately get started with an example. The basic
+building blocks of a pydoit workflow are tasks, which encode the work we
+would like to get done. Here is an extremely simple task:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">task_hello_world</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;echo &quot;hello world!&quot; &gt; hello.txt&#39;</span><span class="p">],</span>
+            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;hello.txt&#39;</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>The task is a python function prefixed with <code class="docutils literal"><span class="pre">task</span></code>, which returns a
+dictionary containing some predefined entries. The <code class="docutils literal"><span class="pre">actions</span></code> entry is
+a list of the actual commands we&#8217;d like to run, in this case, a single
+shell command. The <code class="docutils literal"><span class="pre">targets</span></code> entry is a list of the files output by
+this task.</p>
+<blockquote>
+<div><p class="rubric" id="testing-your-installation">Testing your installation</p>
+<p>Create a working directory, and within it, create a script named
+dodo.py. Copy the above function into it, save, and close. Then,
+move to that directory and run <code class="docutils literal"><span class="pre">doit</span></code>. This should run the task
+and generate <code class="docutils literal"><span class="pre">hello.txt</span></code>.</p>
+</div></blockquote>
+<p>Of course, hello world doesn&#8217;t really do anything for us. Throughout
+this lesson, we&#8217;re going to build a pipeline which downloads some data,
+plots it with matplotlib, generates a markup file with the chart, and
+outputs a final compiled document &#8211; in other words, a barebones version
+of a publication pipeline.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/01-basics.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Camille Scott.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/01-basics.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Targets &mdash; pydoit for automation 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pydoit for automation 1.0 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="targets">
+<h1>Targets<a class="headerlink" href="#targets" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p class="objectives rubric" id="learning-objectives">Learning Objectives</p>
+<ul class="simple">
+<li>Write a task to download the example data.</li>
+<li>Understand how targets work.</li>
+</ul>
+</div></blockquote>
+<p>The first step in our pipeline is to actually get the data. Because
+we&#8217;re all radical open science types, we keep our data freely available
+for download. The data we&#8217;ll use is stored in an <a class="reference external" href="https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz">S3
+bucket</a>.
+It is clearly a dataset of great performance: win ratios from a Super
+Smash Brothers server! We could just have our users download it on their
+own, but we can easily remove this necessity by automating the process
+with curl.</p>
+<p>If we just doing this on the command line, our command would look
+something like this:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz
+</pre></div>
+</div>
+<p>What is going on in this command? It runs a program, <code class="docutils literal"><span class="pre">curl</span></code>, giving it
+a URL, and creates a file, <code class="docutils literal"><span class="pre">Melee_data.csv</span></code>. If we look at the command
+as a task to complete, this file is that task&#8217;s output, and if this file
+exists already, we can safely assume that the command has been run. In
+doit lingo, we call it the task&#8217;s <em>target</em>, and we call the command
+itself the task&#8217;s <em>action</em>. Based on the previous section, you might be
+able to guess what this task would look like.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span><span class="p">],</span>
+            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>Open your <code class="docutils literal"><span class="pre">dodo.py</span></code> and add this function to it. Save and run the
+<code class="docutils literal"><span class="pre">doit</span></code> command. You&#8217;ll see the task output, followed by the normal
+output you&#8217;d expect from <code class="docutils literal"><span class="pre">curl</span></code>.</p>
+<p>The dot means that the task was executed. If we run <code class="docutils literal"><span class="pre">doit</span></code> again, the
+task will run again. This is because we have specified no dependencies,
+and doit will determine that the task is never up to date; we will learn
+about dependencies in the next section.</p>
+<blockquote>
+<div><p class="callout rubric" id="the-doit-command">The doit command</p>
+<p>When we run <code class="docutils literal"><span class="pre">doit</span></code>, the current directory is searched for a file
+named <code class="docutils literal"><span class="pre">dodo.py</span></code>. That file is searched for tasks which are
+executed. Those familiar with <code class="docutils literal"><span class="pre">make</span></code> might have noticed some
+similarity, where typing <code class="docutils literal"><span class="pre">make</span></code> will search the current directoy
+for a file named <code class="docutils literal"><span class="pre">Makefile</span></code>. We will cover alternative ways to
+execute your doit tasks later on.</p>
+</div></blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/02-targets.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Camille Scott.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/02-targets.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

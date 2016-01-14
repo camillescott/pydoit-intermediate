@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Cleaning &mdash; pydoit for automation 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pydoit for automation 1.0 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cleaning">
+<h1>Cleaning<a class="headerlink" href="#cleaning" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p class="objectives rubric" id="learning-objectives">Learning Objectives</p>
+<ul class="simple">
+<li>Learn how to use the <code class="docutils literal"><span class="pre">clean</span></code> attribute.</li>
+<li>Define a custom clean function.</li>
+</ul>
+</div></blockquote>
+<p>In the last section, we changed the heatmap plotting function and had to
+manually remove the target to have it regenerated. Wouldn&#8217;t it be nice
+to not have to do that? Yes, yes it would!</p>
+<p>The best way to accomplish this is via the <code class="docutils literal"><span class="pre">clean</span></code> attribute. As one
+might guess, the <code class="docutils literal"><span class="pre">clean</span></code> attribute should be a function which cleans
+up after the task. Conveniently, the project creator has included an
+extremely useful function for this, called <code class="docutils literal"><span class="pre">clean_targets</span></code>, which just
+goes ahead and <code class="docutils literal"><span class="pre">rm</span></code>&#8216;s the target for that task. Here&#8217;s what it looks
+like included in our humble download task.</p>
+<div class="code python highlight-python"><div class="highlight"><pre>from doit.task include clean_targets
+
+def task_download_data():
+     return {&#39;actions&#39;: [&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;],
+             &#39;targets&#39;: [&#39;Melee_data.csv.gz&#39;],
+             &#39;uptodate&#39;: [run_once],
+             &#39;clean&#39;: [clean_targets]}
+</pre></div>
+</div>
+<p>Now, if we run <code class="docutils literal"><span class="pre">doit</span> <span class="pre">clean</span></code>, the data file will be removed; if we run
+<code class="docutils literal"><span class="pre">doit</span></code>, all the tasks will be rerun, because they all depend directly
+or indirectly on the downloaded data file.</p>
+<blockquote>
+<div><p class="callout rubric" id="cleaning-targets">Cleaning targets</p>
+<p>Pydoit&#8217;s creator clearly saw that removing the targets would be an
+extremely common task. As such, one does not actually need to import
+the <code class="docutils literal"><span class="pre">clean_targets</span></code> function; just passing <code class="docutils literal"><span class="pre">[True]</span></code> to <code class="docutils literal"><span class="pre">clean</span></code>
+will suffice. However, if you would like both remove the targets
+<em>and</em> do something else to revert your task, the list should include
+<code class="docutils literal"><span class="pre">clean_targets</span></code> and whatever other callable or string you&#8217;d like
+run.</p>
+</div></blockquote>
+<p><code class="docutils literal"><span class="pre">clean</span></code> can also be a shell command or function that the user defines.
+For example, we might want to inform the user where the pipeline got the
+file they just blew away.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">DATA_URL</span> <span class="o">=</span> <span class="s">&#39;https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span>
+
+<span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="nf">print_url</span><span class="p">():</span>
+        <span class="k">print</span> <span class="s">&#39;File was retrieved from: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DATA_URL</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;curl -OL {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DATA_URL</span><span class="p">)],</span>
+             <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">],</span>
+             <span class="s">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">],</span>
+             <span class="s">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">,</span> <span class="n">print_url</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">clean</span></code> attribute takes the same form as <code class="docutils literal"><span class="pre">actions</span></code> or even
+<code class="docutils literal"><span class="pre">uptodate</span></code>, and so can also be a string to be executed in the shell.</p>
+<blockquote>
+<div><p class="challenge rubric" id="clean-all-the-things">Clean all the things</p>
+<p>Add <code class="docutils literal"><span class="pre">clean</span></code> attributes to all the currently defined tasks. If
+you&#8217;d like, get creative with your attributes. Include two clean
+actions in at least one of the tasks (the second doesn&#8217;t have to do
+anything groundbreaking).</p>
+</div></blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/05-cleanup.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Camille Scott.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/05-cleanup.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
