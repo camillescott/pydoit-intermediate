@@ -191,10 +191,3 @@ pseudoxml:
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
 
-gh-pages: html
-	touch _build/html/.nojekyll
-	git add _build/
-	git commit -m "Generated gh-pages for `git log master -1 --pretty=short --abbrev-commit`"
-	git subtree split --prefix _build/html -b gh-pages
-	git push -f origin gh-pages:gh-pages
-	git branch -D gh-pages
