@@ -25,7 +25,7 @@ For our download task, we are going to use a function which is included
 in the doit library, ``run_once``. As one might expect, this makes sure
 the task is run at least once. Let's add it to our ``dodo.py``.
 
-    .. code:: python
+.. code:: python
 
     from doit.tools import run_once
 
@@ -37,7 +37,7 @@ the task is run at least once. Let's add it to our ``dodo.py``.
 Now if we run ``doit`` again (twice more, actually), our output will
 change.
 
-    .. code:: bash
+.. code:: bash
 
     -- download_data
 
@@ -76,7 +76,7 @@ introduce a file dependency. The file we downloaded was a gzip archive,
 so we'll write a task to extract it. The command we would run in the
 shell might be:
 
-    .. code:: bash
+.. code:: bash
 
     $ gunzip Melee_data.csv.gz
 
@@ -85,7 +85,7 @@ that we have a *target* (``Melee_data.csv``), an *action* (running
 ``gunzip``), and a *file dependency* (``Melee_data.csv.gz``). Let's add
 the task to our ``dodo.py``.
 
-    .. code:: python
+.. code:: python
 
     def task_gunzip_data():
         return {'actions': ['gunzip -c %(dependencies)s > %(targets)s'],
@@ -99,7 +99,7 @@ the task creator. This removes redundancy and saves us some code.
 When we run ``doit``, we get output showing that only the gunzip task
 was executed.
 
-    .. code::
+.. code::
 
     -- download_data
     .  gunzip_data

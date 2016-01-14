@@ -16,7 +16,7 @@ For me, it helps to immediately get started with an example. The basic
 building blocks of a pydoit workflow are tasks, which encode the work we
 would like to get done. Here is an extremely simple task.
 
-    .. code:: python
+.. code:: python
 
     def task_hello_world():
         return {'actions': ['echo "hello world!" > hello.txt'],

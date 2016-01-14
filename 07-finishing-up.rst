@@ -2,8 +2,6 @@ Finishing Up
 ============
 
     .. rubric:: Learning Objectives
-       :name: learning-objectives
-       :class: objectives
 
     -  Add the final step to compile the document.
     -  Show how to import tasks.
