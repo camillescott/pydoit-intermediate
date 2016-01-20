@@ -125,7 +125,7 @@ add one argument. We'll also modify the `pandoc` function to take an argument.
         
         tasks = []
         tasks.append(task_download_data())
-        tasks.extend([task for task in task_gunzip_data()])
+        tasks.append(task_gunzip_data())
         tasks.append(task_plot_heatmap())
         tasks.append(task_build_markdown_file())
         tasks.append(task_pandoc(outfmt=args.outfmt))
@@ -134,3 +134,44 @@ add one argument. We'll also modify the `pandoc` function to take an argument.
 
     if __name__ == '__main__':
         main()
+
+We can now run this script with a regular python interpreter, like so:
+
+.. code:: bash
+
+    $ python myapp.py --outfmt md
+
+Which will execute the tasks. Unfortunately, we get an error when we run this script!
+The reason has to do with our download task, which uses a `yield` statement, and doesn't play
+well with the decorator. So, we're going to making this task more generalized by removing
+the direct access to the URLs.
+
+.. code:: python
+
+    
+    @make_task
+    def task_download_data(URL, target=None):
+
+        if target is None:
+            target = os.path.basename(URL)
+
+        def print_url(URL):
+            print 'File was retrieved from: {0}'.format(URL)
+
+        return {'name': 'download:{0}'.format(target),
+                'actions': ['curl -OL {0}'.format(URL)],
+                'targets': [target],
+                'uptodate': [run_once],
+                'clean': [clean_targets, (print_url, [URL])]}
+
+    # ... moar code
+
+    def main():
+        # ...
+        for URL in DATA_URLS:
+            tasks.append(task_download_data(URL))
+
+The final modification we need to make is to add `name` attributes to our tasks,
+which are usually taken directly from the function names. Once we're done there,
+we'll have a working doit application.
+

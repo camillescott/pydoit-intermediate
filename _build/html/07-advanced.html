@@ -151,7 +151,7 @@ add one argument. We&#8217;ll also modify the <cite>pandoc</cite> function to ta
 
     <span class="n">tasks</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task_download_data</span><span class="p">())</span>
-    <span class="n">tasks</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">task</span> <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">task_gunzip_data</span><span class="p">()])</span>
+    <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task_gunzip_data</span><span class="p">())</span>
     <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task_plot_heatmap</span><span class="p">())</span>
     <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task_build_markdown_file</span><span class="p">())</span>
     <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task_pandoc</span><span class="p">(</span><span class="n">outfmt</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">outfmt</span><span class="p">))</span>
@@ -162,6 +162,40 @@ add one argument. We&#8217;ll also modify the <cite>pandoc</cite> function to ta
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>We can now run this script with a regular python interpreter, like so:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ python myapp.py --outfmt md
+</pre></div>
+</div>
+<p>Which will execute the tasks. Unfortunately, we get an error when we run this script!
+The reason has to do with our download task, which uses a <cite>yield</cite> statement, and doesn&#8217;t play
+well with the decorator. So, we&#8217;re going to making this task more generalized by removing
+the direct access to the URLs.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="nd">@make_task</span>
+<span class="k">def</span> <span class="nf">task_download_data</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">print_url</span><span class="p">(</span><span class="n">URL</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;File was retrieved from: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;download:{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target</span><span class="p">),</span>
+            <span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;curl -OL {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">URL</span><span class="p">)],</span>
+            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">target</span><span class="p">],</span>
+            <span class="s">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">],</span>
+            <span class="s">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">,</span> <span class="p">(</span><span class="n">print_url</span><span class="p">,</span> <span class="p">[</span><span class="n">URL</span><span class="p">])]}</span>
+
+<span class="c"># ... moar code</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c"># ...</span>
+    <span class="k">for</span> <span class="n">URL</span> <span class="ow">in</span> <span class="n">DATA_URLS</span><span class="p">:</span>
+        <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task_download_data</span><span class="p">(</span><span class="n">URL</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The final modification we need to make is to add <cite>name</cite> attributes to our tasks,
+which are usually taken directly from the function names. Once we&#8217;re done there,
+we&#8217;ll have a working doit application.</p>
 </div>
 
 
