@@ -40,6 +40,12 @@ Setup
        dependencies with ``pip install matplotlib pandas``.
     -  Install `pandoc <http://pandoc.org/installing.html>`__.
 
+Contact
+*******
+
+These materials were created by `Camille Scott <github.com/camillescott>`__. You can tweet
+questions `@camille_codon <https://twitter.com/camille_codon>`__.
+
 Topics
 ------
 
