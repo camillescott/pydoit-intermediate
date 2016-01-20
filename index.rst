@@ -32,7 +32,7 @@ Prerequisites
 Setup
 *****
 
-    -  Make sure you have Python.
+    -  Make sure you have python.
     -  Install the necessary python libraries. If you are using
        Anaconda, you should have several of these already, and can
        proceed with: ``pip install doit seaborn jinja2``.
@@ -52,5 +52,5 @@ Topics
     04-python
     05-cleanup
     06-subtasks
-    07-finishing-up
+    07-advanced
 
