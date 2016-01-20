@@ -20,22 +20,24 @@ def make_task(task_dict_func):
 
 
 @make_task
-def task_download_data():
+def task_download_data(URL, target=None):
+
+    if target is None:
+        target = os.path.basename(URL)
 
     def print_url(URL):
         print 'File was retrieved from: {0}'.format(URL)
 
-    for URL in DATA_URLS:
-        target = os.path.basename(URL)
-        yield {'name': 'download:{0}'.format(target),
-               'actions': ['curl -OL {0}'.format(URL)],
-               'targets': [target],
-               'uptodate': [run_once],
-               'clean': [clean_targets, (print_url, [URL])]}
+    return {'name': 'download:{0}'.format(target),
+            'actions': ['curl -OL {0}'.format(URL)],
+            'targets': [target],
+            'uptodate': [run_once],
+            'clean': [clean_targets, (print_url, [URL])]}
 
 @make_task
 def task_gunzip_data():
-    return {'actions': ['gunzip -c %(dependencies)s > %(targets)s'],
+    return {'name': 'do_gunzip',
+            'actions': ['gunzip -c %(dependencies)s > %(targets)s'],
             'targets': ['Melee_data.csv'],
             'file_dep': ['Melee_data.csv.gz']}
 
@@ -102,7 +104,8 @@ def main():
     args = parser.parse_args()
     
     tasks = []
-    tasks.append(task_download_data())
+    for URL in DATA_URLS:
+        tasks.append(task_download_data(URL))
     tasks.append(task_gunzip_data())
     tasks.append(task_plot_heatmap())
     tasks.append(task_build_markdown_file())
