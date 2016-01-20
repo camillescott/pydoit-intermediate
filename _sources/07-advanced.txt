@@ -175,3 +175,5 @@ The final modification we need to make is to add `name` attributes to our tasks,
 which are usually taken directly from the function names. Once we're done there,
 we'll have a working doit application.
 
+To save some time and any headaches, a final, working form can be :download:`found here 
+<_static/myapp.py>`.
