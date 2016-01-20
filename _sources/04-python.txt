@@ -23,13 +23,13 @@ this way.
 
     def task_plot_heatmap():
 
-        def do_plot(file_dep, targets):
+        def do_plot(dependencies, targets):
             import matplotlib.pyplot as plt
             import pandas as pd
             import seaborn as sns
 
             # Read the data in a DataFrame
-            data = pd.read_csv(file_dep[0], index_col=0)
+            data = pd.read_csv(list(dependencies)[0], index_col=0)
             # Make a heatmap and dendrogram with seaborn
             clst = sns.clustermap(data, linewidths=.5, figsize=(8, 8), square=True,
                                   method='ward', z_score=0, row_cluster=False)
