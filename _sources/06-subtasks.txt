@@ -32,8 +32,8 @@ task function.
 
 .. code:: python
 
-    import os
     from doit.task include clean_targets
+    import os
 
     DATA_URLS = ['https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.document.md.tpl',
                  'https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz']

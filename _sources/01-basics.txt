@@ -7,12 +7,15 @@ Background and Basics
     -  Write a pydoit hello world
 
 If you've made it this far, I will assume you've been convinced and are prepared to receive
-your happiness and smugness, and are ready to dive into doit. 
+your happiness and smugness, and are ready to dive into doit. doit is best compared to build
+systems like make, which track dependencies and outputs for a list of commands and manage
+execution of programs on those files. Unlike make though, doit is pure python, and can run
+either shell commands or arbitrary python code. It also can be used as a library for task
+management, where the programmer can build applications using doit tasks as the bricks
+and the doit library as the mortar.
 
--  Pydoit it is a task management and automation tool
--  It is similar to build systems like make
--  Tasks are defined individually and executed in order according to
-   dependencies, via a directed acyclic graph
+For now though, we'll look at the more canonical way of using doit, which is as a simple
+build and automation system.
 
 .. seealso:: `A comparison between GNU Make and pydoit by Software Carpentry <http://swcarpentry.github.io/bc/intermediate/doit/make-vs-doit.html>`__
 

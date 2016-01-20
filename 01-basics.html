@@ -48,13 +48,14 @@
 </ul>
 </div></blockquote>
 <p>If you&#8217;ve made it this far, I will assume you&#8217;ve been convinced and are prepared to receive
-your happiness and smugness, and are ready to dive into doit.</p>
-<ul class="simple">
-<li>Pydoit it is a task management and automation tool</li>
-<li>It is similar to build systems like make</li>
-<li>Tasks are defined individually and executed in order according to
-dependencies, via a directed acyclic graph</li>
-</ul>
+your happiness and smugness, and are ready to dive into doit. doit is best compared to build
+systems like make, which track dependencies and outputs for a list of commands and manage
+execution of programs on those files. Unlike make though, doit is pure python, and can run
+either shell commands or arbitrary python code. It also can be used as a library for task
+management, where the programmer can build applications using doit tasks as the bricks
+and the doit library as the mortar.</p>
+<p>For now though, we&#8217;ll look at the more canonical way of using doit, which is as a simple
+build and automation system.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://swcarpentry.github.io/bc/intermediate/doit/make-vs-doit.html">A comparison between GNU Make and pydoit by Software Carpentry</a></p>

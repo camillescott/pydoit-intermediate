@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="pydoit for automation 1.0 documentation" href="index.html" />
-    <link rel="next" title="Finishing Up" href="07-finishing-up.html" />
+    <link rel="next" title="Advanced doit: Applications" href="07-advanced.html" />
     <link rel="prev" title="Cleaning" href="05-cleanup.html" />
    
   
@@ -68,8 +68,8 @@ currently, it only downloads a single file. &#8220;Surely,&#8221; you say, &#822
 task must be capable of downloading other files!&#8221; And you would be
 correct! We can use <em>subtasks</em> to generate multiple tasks from the same
 task function.</p>
-<div class="code python highlight-python"><div class="highlight"><pre>import os
-from doit.task include clean_targets
+<div class="code python highlight-python"><div class="highlight"><pre>from doit.task include clean_targets
+import os
 
 DATA_URLS = [&#39;https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.document.md.tpl&#39;,
              &#39;https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;]
@@ -147,7 +147,7 @@ fields?</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="05-cleanup.html" title="previous chapter">Cleaning</a></li>
-      <li>Next: <a href="07-finishing-up.html" title="next chapter">Finishing Up</a></li>
+      <li>Next: <a href="07-advanced.html" title="next chapter">Advanced doit: Applications</a></li>
   </ul></li>
 </ul>
 </div>
