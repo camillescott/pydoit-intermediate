@@ -99,5 +99,5 @@ of keyword arguments.
 
     Although templating isn't specific to pydoit, you may find jinja2
     quite useful. Try playing around with the template ``.tpl`` file and
-    adding your own content to it. Can you see how to to add additional
+    adding your own content to it. Can you see how to add additional
     fields?

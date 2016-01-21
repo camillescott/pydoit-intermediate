@@ -19,7 +19,7 @@ where ``uptodate`` comes in.
 ``uptodate`` is another entry in the task dictionary. It is a list of
 booleans, callables (that is, functions), or strings specifying shell
 commands. If any of the ``uptodate`` items evaluates to ``False``, the
-task is not run.
+task is out-of-date and run.
 
 For our download task, we are going to use a function which is included
 in the doit library, ``run_once``. As one might expect, this makes sure
