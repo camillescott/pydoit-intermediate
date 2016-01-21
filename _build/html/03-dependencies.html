@@ -59,7 +59,7 @@ where <code class="docutils literal"><span class="pre">uptodate</span></code> co
 <p><code class="docutils literal"><span class="pre">uptodate</span></code> is another entry in the task dictionary. It is a list of
 booleans, callables (that is, functions), or strings specifying shell
 commands. If any of the <code class="docutils literal"><span class="pre">uptodate</span></code> items evaluates to <code class="docutils literal"><span class="pre">False</span></code>, the
-task is not run.</p>
+task is out-of-date and run.</p>
 <p>For our download task, we are going to use a function which is included
 in the doit library, <code class="docutils literal"><span class="pre">run_once</span></code>. As one might expect, this makes sure
 the task is run at least once. Let&#8217;s add it to our <code class="docutils literal"><span class="pre">dodo.py</span></code>.</p>

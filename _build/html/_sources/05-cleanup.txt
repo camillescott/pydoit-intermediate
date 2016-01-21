@@ -19,7 +19,7 @@ like included in our humble download task.
 
 .. code:: python
 
-    from doit.task include clean_targets
+    from doit.task import clean_targets
 
     def task_download_data():
          return {'actions': ['curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz'],
