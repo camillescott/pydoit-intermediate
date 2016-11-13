@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Cleaning &mdash; pydoit for automation 1.0 documentation</title>
+    <title>Cleaning &#8212; pydoit for automation 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,15 +23,20 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="pydoit for automation 1.0 documentation" href="index.html" />
     <link rel="next" title="Subtasks" href="06-subtasks.html" />
     <link rel="prev" title="Python Tasks" href="04-python.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -56,13 +61,13 @@ up after the task. Conveniently, the project creator has included an
 extremely useful function for this, called <code class="docutils literal"><span class="pre">clean_targets</span></code>, which just
 goes ahead and <code class="docutils literal"><span class="pre">rm</span></code>&#8216;s the target for that task. Here&#8217;s what it looks
 like included in our humble download task.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">doit.task</span> <span class="kn">import</span> <span class="n">clean_targets</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">doit.task</span> <span class="k">import</span> <span class="n">clean_targets</span>
 
 <span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
-     <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span><span class="p">],</span>
-             <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">],</span>
-             <span class="s">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">],</span>
-             <span class="s">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">]}</span>
+     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span><span class="p">],</span>
+             <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv.gz&#39;</span><span class="p">],</span>
+             <span class="s1">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">],</span>
+             <span class="s1">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">]}</span>
 </pre></div>
 </div>
 <p>Now, if we run <code class="docutils literal"><span class="pre">doit</span> <span class="pre">clean</span></code>, the data file will be removed; if we run
@@ -79,17 +84,17 @@ run.</div></blockquote>
 <p><code class="docutils literal"><span class="pre">clean</span></code> can also be a shell command or function that the user defines.
 For example, we might want to inform the user where the pipeline got the
 file they just blew away.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="n">DATA_URL</span> <span class="o">=</span> <span class="s">&#39;https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">DATA_URL</span> <span class="o">=</span> <span class="s1">&#39;https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span>
 
 <span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
 
     <span class="k">def</span> <span class="nf">print_url</span><span class="p">():</span>
-        <span class="k">print</span> <span class="s">&#39;File was retrieved from: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DATA_URL</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="s1">&#39;File was retrieved from: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DATA_URL</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;curl -OL {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DATA_URL</span><span class="p">)],</span>
-             <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">],</span>
-             <span class="s">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">],</span>
-             <span class="s">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">,</span> <span class="n">print_url</span><span class="p">]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;curl -OL </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DATA_URL</span><span class="p">)],</span>
+             <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv.gz&#39;</span><span class="p">],</span>
+             <span class="s1">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">],</span>
+             <span class="s1">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">,</span> <span class="n">print_url</span><span class="p">]}</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal"><span class="pre">clean</span></code> attribute takes the same form as <code class="docutils literal"><span class="pre">actions</span></code> or even
@@ -127,14 +132,11 @@ anything groundbreaking).</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -145,8 +147,8 @@ anything groundbreaking).</p>
       &copy;2016, Camille Scott.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
       |
       <a href="_sources/05-cleanup.txt"

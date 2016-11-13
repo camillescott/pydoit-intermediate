@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Targets &mdash; pydoit for automation 1.0 documentation</title>
+    <title>Targets &#8212; pydoit for automation 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,15 +23,20 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="pydoit for automation 1.0 documentation" href="index.html" />
     <link rel="next" title="Dependencies and Task Status" href="03-dependencies.html" />
     <link rel="prev" title="Background and Basics" href="01-basics.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -57,7 +62,7 @@ own, but we can easily remove this necessity by automating the process
 with curl.</p>
 <p>If we just doing this on the command line, our command would look
 something like this:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz
+<div class="code bash highlight-default"><div class="highlight"><pre><span></span>$ curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz
 </pre></div>
 </div>
 <p>What is going on in this command? It runs a program, <code class="docutils literal"><span class="pre">curl</span></code>, giving it
@@ -67,9 +72,9 @@ exists already, we can safely assume that the command has been run. In
 doit lingo, we call it the task&#8217;s <em>target</em>, and we call the command
 itself the task&#8217;s <em>action</em>. Based on the previous section, you might be
 able to guess what this task would look like.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span><span class="p">],</span>
-            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">]}</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv.gz&#39;</span><span class="p">]}</span>
 </pre></div>
 </div>
 <p>Open your <code class="docutils literal"><span class="pre">dodo.py</span></code> and add this function to it. Save and run the
@@ -112,14 +117,11 @@ execute your doit tasks later on.</div></blockquote>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -130,8 +132,8 @@ execute your doit tasks later on.</div></blockquote>
       &copy;2016, Camille Scott.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
       |
       <a href="_sources/02-targets.txt"

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Advanced doit: Applications &mdash; pydoit for automation 1.0 documentation</title>
+    <title>Advanced doit: Applications &#8212; pydoit for automation 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,14 +23,19 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="pydoit for automation 1.0 documentation" href="index.html" />
     <link rel="prev" title="Subtasks" href="06-subtasks.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -51,15 +56,15 @@ define a simple workflow and run it with <cite>doit</cite>. However, we haven&#8
 about how the tasks are actually executed and what <cite>doit</cite> does. To motivate this discussion,
 let&#8217;s first define our final task, which compiles the document. Hopefully you&#8217;ve already
 downloaded pandoc; if not, head back to the home page and follow the link there.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">task_pandoc</span><span class="p">():</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">task_pandoc</span><span class="p">():</span>
 
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s">&#39;pandoc -r markdown+yaml_metadata_block+startnum+fancy_lists&#39;</span>\
-          <span class="s">&#39; -s -S </span><span class="si">%(dependencies)s</span><span class="s"> -o </span><span class="si">%(targets)s</span><span class="s">&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;pandoc -r markdown+yaml_metadata_block+startnum+fancy_lists&#39;</span>\
+          <span class="s1">&#39; -s -S </span><span class="si">%(dependencies)s</span><span class="s1"> -o </span><span class="si">%(targets)s</span><span class="s1">&#39;</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">cmd</span><span class="p">],</span>
-            <span class="s">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.document.md&#39;</span><span class="p">],</span>
-            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.document.pdf&#39;</span><span class="p">],</span>
-            <span class="s">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">cmd</span><span class="p">],</span>
+            <span class="s1">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv.document.md&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv.document.pdf&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">]}</span>
 </pre></div>
 </div>
 <p>This task compiles the markdown document into a nice PDF using LaTeX. Running <cite>doit</cite>
@@ -78,7 +83,7 @@ starting with &#8220;task&#8221; and runs the task generator on them. If the tas
 by this step, they just return regular old dictionaries, which isn&#8217;t what we want! To get
 around this, we will use the built-in <cite>dict_to_task</cite> function to create a decorator we can apply
 to our task functions.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">doit.task</span> <span class="kn">import</span> <span class="n">dict_to_task</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">doit.task</span> <span class="k">import</span> <span class="n">dict_to_task</span>
 
 <span class="k">def</span> <span class="nf">make_task</span><span class="p">(</span><span class="n">task_dict_func</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Wrapper to decorate functions returning pydoit</span>
@@ -95,23 +100,23 @@ to our task functions.</p>
 old functions, decorate them, and execute them with a loader whenever we want. That way, we can
 write our own infrastructure instead of relying on the <cite>doit</cite> command. We can write our own
 simple task loader by inheriting from the <cite>TaskLoader</cite> base class, like so:</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">doit.cmd_base</span> <span class="kn">import</span> <span class="n">TaskLoader</span>
-<span class="kn">from</span> <span class="nn">doit.doit_cmd</span> <span class="kn">import</span> <span class="n">DoitMain</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">doit.cmd_base</span> <span class="k">import</span> <span class="n">TaskLoader</span>
+<span class="kn">from</span> <span class="nn">doit.doit_cmd</span> <span class="k">import</span> <span class="n">DoitMain</span>
 
-<span class="k">def</span> <span class="nf">run_tasks</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;verbosity&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}):</span>
+<span class="k">def</span> <span class="nf">run_tasks</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;verbosity&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}):</span>
     <span class="sd">&#39;&#39;&#39;Given a list of `Task` objects, a list of arguments,</span>
 <span class="sd">    and a config dictionary, execute the tasks.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;tasks must be of type list.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;tasks must be of type list.&#39;</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Loader</span><span class="p">(</span><span class="n">TaskLoader</span><span class="p">):</span>
         <span class="nd">@staticmethod</span>
         <span class="k">def</span> <span class="nf">load_tasks</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">opt_values</span><span class="p">,</span> <span class="n">pos_args</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">tasks</span><span class="p">,</span> <span class="n">config</span>
 
-    <span class="n">DoitMain</span><span class="p">(</span><span class="n">Loader</span><span class="p">())</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">DoitMain</span><span class="p">(</span><span class="n">Loader</span><span class="p">())</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If this all seems a little obtuse, don&#8217;t be alarmed; this is most of what you need to start
@@ -122,31 +127,31 @@ using it. You can read more <a class="reference external" href="http://pydoit.or
 <p>We&#8217;re now ready to create our application. Create a new file called <cite>myapp.py</cite> (or whatever you&#8217;d
 like) and copy the above pieces of code into it. Then, copy
 the code from <cite>dodo.py</cite> into it and decorate the tasks with <cite>make_task</cite>, like so:</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="nd">@make_task</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="nd">@make_task</span>
 <span class="k">def</span> <span class="nf">gunzip_data</span><span class="p">():</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;gunzip -c </span><span class="si">%(dependencies)s</span><span class="s"> &gt; </span><span class="si">%(targets)s</span><span class="s">&#39;</span><span class="p">],</span>
-            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv&#39;</span><span class="p">],</span>
-            <span class="s">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;gunzip -c </span><span class="si">%(dependencies)s</span><span class="s1"> &gt; </span><span class="si">%(targets)s</span><span class="s1">&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv.gz&#39;</span><span class="p">]}</span>
 </pre></div>
 </div>
 <p>Finally, we&#8217;ll add the argument parsing. Defined a new function <cite>main</cite>, import argparse, and
 add one argument. We&#8217;ll also modify the <cite>pandoc</cite> function to take an argument.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="nd">@make_task</span>
-<span class="k">def</span> <span class="nf">task_pandoc</span><span class="p">(</span><span class="n">outfmt</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">):</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="nd">@make_task</span>
+<span class="k">def</span> <span class="nf">task_pandoc</span><span class="p">(</span><span class="n">outfmt</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">):</span>
 
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s">&#39;pandoc -r markdown+yaml_metadata_block+startnum+fancy_lists&#39;</span>\
-          <span class="s">&#39; -s -S </span><span class="si">%(dependencies)s</span><span class="s"> -o </span><span class="si">%(targets)s</span><span class="s">&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;pandoc -r markdown+yaml_metadata_block+startnum+fancy_lists&#39;</span>\
+          <span class="s1">&#39; -s -S </span><span class="si">%(dependencies)s</span><span class="s1"> -o </span><span class="si">%(targets)s</span><span class="s1">&#39;</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">cmd</span><span class="p">],</span>
-            <span class="s">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.document.md&#39;</span><span class="p">],</span>
-            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.document.{fmt}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="n">outfmt</span><span class="p">)],</span>
-            <span class="s">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">cmd</span><span class="p">],</span>
+            <span class="s1">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv.document.md&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv.document.</span><span class="si">{fmt}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="n">outfmt</span><span class="p">)],</span>
+            <span class="s1">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">]}</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="kn">import</span> <span class="nn">argparse</span>
 
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;--outfmt&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&#39;pdf&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--outfmt&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 
     <span class="n">tasks</span> <span class="o">=</span> <span class="p">[]</span>
@@ -156,39 +161,39 @@ add one argument. We&#8217;ll also modify the <cite>pandoc</cite> function to ta
     <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task_build_markdown_file</span><span class="p">())</span>
     <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task_pandoc</span><span class="p">(</span><span class="n">outfmt</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">outfmt</span><span class="p">))</span>
 
-    <span class="n">run_tasks</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;run&#39;</span><span class="p">])</span>
+    <span class="n">run_tasks</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">])</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>We can now run this script with a regular python interpreter, like so:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ python myapp.py --outfmt md
+<div class="code bash highlight-default"><div class="highlight"><pre><span></span>$ python myapp.py --outfmt md
 </pre></div>
 </div>
 <p>Which will execute the tasks. Unfortunately, we get an error when we run this script!
 The reason has to do with our download task, which uses a <cite>yield</cite> statement, and doesn&#8217;t play
 well with the decorator. So, we&#8217;re going to making this task more generalized by removing
 the direct access to the URLs.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="nd">@make_task</span>
-<span class="k">def</span> <span class="nf">task_download_data</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="nd">@make_task</span>
+<span class="k">def</span> <span class="nf">task_download_data</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-    <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">print_url</span><span class="p">(</span><span class="n">URL</span><span class="p">):</span>
-        <span class="k">print</span> <span class="s">&#39;File was retrieved from: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="s1">&#39;File was retrieved from: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;download:{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target</span><span class="p">),</span>
-            <span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;curl -OL {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">URL</span><span class="p">)],</span>
-            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">target</span><span class="p">],</span>
-            <span class="s">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">],</span>
-            <span class="s">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">,</span> <span class="p">(</span><span class="n">print_url</span><span class="p">,</span> <span class="p">[</span><span class="n">URL</span><span class="p">])]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;download:</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target</span><span class="p">),</span>
+            <span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;curl -OL </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">URL</span><span class="p">)],</span>
+            <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">target</span><span class="p">],</span>
+            <span class="s1">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">],</span>
+            <span class="s1">&#39;clean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">clean_targets</span><span class="p">,</span> <span class="p">(</span><span class="n">print_url</span><span class="p">,</span> <span class="p">[</span><span class="n">URL</span><span class="p">])]}</span>
 
-<span class="c"># ... moar code</span>
+<span class="c1"># ... moar code</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="c"># ...</span>
+    <span class="c1"># ...</span>
     <span class="k">for</span> <span class="n">URL</span> <span class="ow">in</span> <span class="n">DATA_URLS</span><span class="p">:</span>
         <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task_download_data</span><span class="p">(</span><span class="n">URL</span><span class="p">))</span>
 </pre></div>
@@ -196,7 +201,7 @@ the direct access to the URLs.</p>
 <p>The final modification we need to make is to add <cite>name</cite> attributes to our tasks,
 which are usually taken directly from the function names. Once we&#8217;re done there,
 we&#8217;ll have a working doit application.</p>
-<p>To save some time and any headaches, a final, working form can be <a class="reference download internal" href="_downloads/myapp.py"><code class="xref download docutils literal"><span class="pre">found</span> <span class="pre">here</span></code></a>.</p>
+<p>To save some time and any headaches, a final, working form can be <a class="reference download internal" href="_downloads/myapp.py" download=""><code class="xref download docutils literal"><span class="pre">found</span> <span class="pre">here</span></code></a>.</p>
 </div>
 
 
@@ -222,14 +227,11 @@ we&#8217;ll have a working doit application.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -240,8 +242,8 @@ we&#8217;ll have a working doit application.</p>
       &copy;2016, Camille Scott.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
       |
       <a href="_sources/07-advanced.txt"
