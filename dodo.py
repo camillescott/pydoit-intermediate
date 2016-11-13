@@ -1,7 +1,12 @@
+from __future__ import print_function
 import glob
 import os
 
 input_files = glob.glob('*.rst')
+for ext in ['py','md','csv','tpl']:
+    print
+    input_files.extend(glob.glob(os.path.join('_static', '*.' + ext)))
+print(input_files)
 
 def task_build_html():
 
