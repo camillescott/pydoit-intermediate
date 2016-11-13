@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Dependencies and Task Status &mdash; pydoit for automation 1.0 documentation</title>
+    <title>Dependencies and Task Status &#8212; pydoit for automation 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,15 +23,20 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="pydoit for automation 1.0 documentation" href="index.html" />
     <link rel="next" title="Python Tasks" href="04-python.html" />
     <link rel="prev" title="Targets" href="02-targets.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">  
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -63,17 +68,17 @@ task is out-of-date and run.</p>
 <p>For our download task, we are going to use a function which is included
 in the doit library, <code class="docutils literal"><span class="pre">run_once</span></code>. As one might expect, this makes sure
 the task is run at least once. Let&#8217;s add it to our <code class="docutils literal"><span class="pre">dodo.py</span></code>.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">doit.tools</span> <span class="kn">import</span> <span class="n">run_once</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">doit.tools</span> <span class="k">import</span> <span class="n">run_once</span>
 
 <span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span><span class="p">],</span>
-            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">],</span>
-            <span class="s">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">]}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;curl -OL https://s3.amazonaws.com/pydoit-intermediate/Melee_data.csv.gz&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv.gz&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;uptodate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">run_once</span><span class="p">]}</span>
 </pre></div>
 </div>
 <p>Now if we run <code class="docutils literal"><span class="pre">doit</span></code> again (twice more, actually), our output will
 change.</p>
-<div class="code bash highlight-python"><div class="highlight"><pre><span class="o">--</span> <span class="n">download_data</span>
+<div class="code bash highlight-default"><div class="highlight"><pre><span></span><span class="o">--</span> <span class="n">download_data</span>
 </pre></div>
 </div>
 <p>The dash-dash indicates that the task was determined to be up to date,
@@ -106,17 +111,17 @@ about <code class="docutils literal"><span class="pre">[False]</span></code>?</p
 introduce a file dependency. The file we downloaded was a gzip archive,
 so we&#8217;ll write a task to extract it. The command we would run in the
 shell might be:</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ gunzip Melee_data.csv.gz
+<div class="code bash highlight-default"><div class="highlight"><pre><span></span>$ gunzip Melee_data.csv.gz
 </pre></div>
 </div>
 <p>This would produce a file called <code class="docutils literal"><span class="pre">Melee_data.csv</span></code>. We can see then
 that we have a <em>target</em> (<code class="docutils literal"><span class="pre">Melee_data.csv</span></code>), an <em>action</em> (running
 <code class="docutils literal"><span class="pre">gunzip</span></code>), and a <em>file dependency</em> (<code class="docutils literal"><span class="pre">Melee_data.csv.gz</span></code>). Let&#8217;s add
 the task to our <code class="docutils literal"><span class="pre">dodo.py</span></code>.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">task_gunzip_data</span><span class="p">():</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;gunzip -c </span><span class="si">%(dependencies)s</span><span class="s"> &gt; </span><span class="si">%(targets)s</span><span class="s">&#39;</span><span class="p">],</span>
-            <span class="s">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv&#39;</span><span class="p">],</span>
-            <span class="s">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Melee_data.csv.gz&#39;</span><span class="p">]}</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">task_gunzip_data</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;gunzip -c </span><span class="si">%(dependencies)s</span><span class="s1"> &gt; </span><span class="si">%(targets)s</span><span class="s1">&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Melee_data.csv.gz&#39;</span><span class="p">]}</span>
 </pre></div>
 </div>
 <p>On top of the file dependency, this task also introduces <em>automatic
@@ -124,8 +129,8 @@ variables</em>. These are in the <code class="docutils literal"><span class="pre
 the task creator. This removes redundancy and saves us some code.</p>
 <p>When we run <code class="docutils literal"><span class="pre">doit</span></code>, we get output showing that only the gunzip task
 was executed.</p>
-<div class="code highlight-python"><div class="highlight"><pre>-- download_data
-.  gunzip_data
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="o">--</span> <span class="n">download_data</span>
+<span class="o">.</span>  <span class="n">gunzip_data</span>
 </pre></div>
 </div>
 </div>
@@ -154,14 +159,11 @@ was executed.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -172,8 +174,8 @@ was executed.</p>
       &copy;2016, Camille Scott.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
       |
       <a href="_sources/03-dependencies.txt"
