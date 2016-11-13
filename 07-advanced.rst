@@ -80,7 +80,7 @@ simple task loader by inheriting from the `TaskLoader` base class, like so:
             def load_tasks(cmd, opt_values, pos_args):
                 return tasks, config
        
-        DoitMain(Loader()).run(args)
+        return DoitMain(Loader()).run(args)
 
 If this all seems a little obtuse, don't be alarmed; this is most of what you need to start
 writing your own applications with doit. The `TaskLoader` is what parses a file or object and
